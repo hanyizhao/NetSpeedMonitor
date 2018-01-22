@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2024
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetSpeedMonitor", "NetSpeedMonitor\NetSpeedMonitor.csproj", "{E2E127EA-1E45-427F-A63C-B3327D97BA03}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E2E127EA-1E45-427F-A63C-B3327D97BA03}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E2E127EA-1E45-427F-A63C-B3327D97BA03}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E2E127EA-1E45-427F-A63C-B3327D97BA03}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E2E127EA-1E45-427F-A63C-B3327D97BA03}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7EA1A732-BC87-4403-B748-1ACBE9600AD5}
+	EndGlobalSection
+EndGlobal

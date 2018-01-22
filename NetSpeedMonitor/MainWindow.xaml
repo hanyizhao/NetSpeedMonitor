@@ -1,0 +1,36 @@
+﻿<Window x:Class="USTC.Software.hanyizhao.NetSpeedMonitor.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" 
+        ShowInTaskbar="False"
+        WindowStyle="None"
+        AllowsTransparency="true"
+        ResizeMode="NoResize"
+        Topmost="True"
+        MouseEnter="Window_MouseEnter"
+        MouseLeftButtonUp="Window_MouseLeftButtonUp"
+        MouseLeave="Window_MouseLeave"
+        MouseMove="Window_MouseMove"
+        MouseLeftButtonDown="Window_MouseLeftButtonDown"
+        Loaded="Window_Loaded"
+        Height="28" Width="132">
+    <Window.Background>
+        <ImageBrush ImageSource="/images/background.png" />
+    </Window.Background>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="68"/>
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+
+        <Label Name="DownloadLabel" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0,0,5,2.2" FontSize="10.3">0K/s</Label>
+        <Label Name="UploadLabel" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0,0,11,2.2" FontSize="10.3">0K/s</Label>
+    </Grid>
+</Window>
