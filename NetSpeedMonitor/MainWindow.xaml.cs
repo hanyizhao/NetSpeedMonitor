@@ -375,22 +375,22 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
                 {
                     if (Top - windowPadding.Top <= 2)
                     {
-                        Top = -windowPadding.Bottom - Height;
+                        Top = -windowPadding.Bottom - Height + edgeHideSpace;
                         isEdgeHide = true;
                     }
                     else if (SystemParameters.PrimaryScreenHeight - (Top + Height + windowPadding.Bottom) <= 2)
                     {
-                        Top = SystemParameters.PrimaryScreenHeight + windowPadding.Top;
+                        Top = SystemParameters.PrimaryScreenHeight + windowPadding.Top - edgeHideSpace;
                         isEdgeHide = true;
                     }
                     else if (Left - windowPadding.Left <= 2)
                     {
-                        Left = -windowPadding.Right - Width;
+                        Left = -windowPadding.Right - Width + edgeHideSpace;
                         isEdgeHide = true;
                     }
                     else if (SystemParameters.PrimaryScreenWidth - (Left + Width + windowPadding.Right) <= 2)
                     {
-                        Left = SystemParameters.PrimaryScreenWidth + windowPadding.Left;
+                        Left = SystemParameters.PrimaryScreenWidth + windowPadding.Left - edgeHideSpace;
                         isEdgeHide = true;
                     }
                 }
@@ -441,6 +441,7 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
         private DetailWindow detailWindow;
         
         private bool isEdgeHide = false;
+        private double edgeHideSpace = 4;
 
         private double oldLeft, oldTop;
         private DateTime leftPressTime = DateTime.Now;
