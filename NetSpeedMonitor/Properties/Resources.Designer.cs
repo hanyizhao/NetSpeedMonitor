@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace USTC.Software.hanyizhao.NetSpeedMonitor.Properties {
+namespace USTC.Software.hanyizhao.Properties {
     using System;
     
     

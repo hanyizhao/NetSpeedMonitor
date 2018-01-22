@@ -94,7 +94,18 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
         {
             if (items.Count == 0)
             {
-
+                for(int i = 0;i < ContentGrid.RowDefinitions.Count;i++)
+                {
+                    if(names[i].Text == null|| names[i].Text == "")
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        ups[i].Text = "0K/s";
+                        downs[i].Text = "0K/s";
+                    }
+                }
             }
             else
             {

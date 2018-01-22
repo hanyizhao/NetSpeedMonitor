@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.27130.2024
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetSpeedMonitor", "NetSpeedMonitor\NetSpeedMonitor.csproj", "{E2E127EA-1E45-427F-A63C-B3327D97BA03}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "NetSpeedMonitorSetup", "NetSpeedMonitorSetup\NetSpeedMonitorSetup.vdproj", "{F721A8E7-747E-4236-811C-3D43A1D3C353}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,8 @@ Global
 		{E2E127EA-1E45-427F-A63C-B3327D97BA03}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E2E127EA-1E45-427F-A63C-B3327D97BA03}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E2E127EA-1E45-427F-A63C-B3327D97BA03}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F721A8E7-747E-4236-811C-3D43A1D3C353}.Debug|Any CPU.ActiveCfg = Debug
+		{F721A8E7-747E-4236-811C-3D43A1D3C353}.Release|Any CPU.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

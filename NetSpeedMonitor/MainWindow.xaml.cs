@@ -59,6 +59,10 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
         private void DetailWindow_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             portProcessMap.Enabled = detailWindow.IsVisible;
+            if(!detailWindow.IsVisible)
+            {
+                TryToEdgeHide();
+            }
         }
 
         private void InitializeTray()
@@ -256,6 +260,7 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
         private void Window_MouseEnter(object sender, MouseEventArgs e)
         {
             detailWindow.OthersWantShow(false);
+            TryToEdgeShow();
         }
 
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -270,6 +275,7 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
         private void Window_MouseLeave(object sender, MouseEventArgs e)
         {
             detailWindow.OthersWantHide(false);
+            TryToEdgeHide();
         }
 
         private void Window_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
@@ -278,6 +284,7 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
             {
                 if (DateTime.Now.Subtract(leftPressTime).TotalMilliseconds < 500)
                 {
+                    TryToEdgeShow();
                     detailWindow.OthersWantShow(true);
                 }
             }
@@ -286,7 +293,6 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
                 detailWindow.OthersWantShow(false);
                 Tool.MoveWindowBackToWorkArea(this, windowPadding);
             }
-
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -335,6 +341,65 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
             }
         }
 
+
+        private void TryToEdgeShow()
+        {
+            if(isEdgeHide)
+            {
+                if (Top + windowPadding.Top < 0)
+                {
+                    Top = windowPadding.Top;
+                }
+                if (Top + Height + windowPadding.Bottom > SystemParameters.PrimaryScreenHeight)
+                {
+                    Top = SystemParameters.PrimaryScreenHeight - Height - windowPadding.Bottom;
+                }
+                if (Left + windowPadding.Left < 0)
+                {
+                    Left = windowPadding.Left;
+                }
+                if (Left + Width + windowPadding.Right > SystemParameters.PrimaryScreenWidth)
+                {
+                    Left = SystemParameters.PrimaryScreenWidth - Width - windowPadding.Right;
+                }
+                isEdgeHide = false;
+            }
+            
+        }
+
+        private void TryToEdgeHide()
+        {
+            if (!isEdgeHide)
+            {
+                if (!detailWindow.IsVisible)
+                {
+                    if (Top - windowPadding.Top <= 2)
+                    {
+                        Top = -windowPadding.Bottom - Height;
+                        isEdgeHide = true;
+                    }
+                    else if (SystemParameters.PrimaryScreenHeight - (Top + Height + windowPadding.Bottom) <= 2)
+                    {
+                        Top = SystemParameters.PrimaryScreenHeight + windowPadding.Top;
+                        isEdgeHide = true;
+                    }
+                    else if (Left - windowPadding.Left <= 2)
+                    {
+                        Left = -windowPadding.Right - Width;
+                        isEdgeHide = true;
+                    }
+                    else if (SystemParameters.PrimaryScreenWidth - (Left + Width + windowPadding.Right) <= 2)
+                    {
+                        Left = SystemParameters.PrimaryScreenWidth + windowPadding.Left;
+                        isEdgeHide = true;
+                    }
+                }
+
+            }
+            
+        }
+
+        
         private void RegisterAppBar(bool register)
         {
             APPBARDATA abd = new APPBARDATA();
@@ -374,6 +439,8 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
         private int uCallBackMsg;
 
         private DetailWindow detailWindow;
+        
+        private bool isEdgeHide = false;
 
         private double oldLeft, oldTop;
         private DateTime leftPressTime = DateTime.Now;
