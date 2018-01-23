@@ -46,8 +46,17 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
                 Interval = 1,
                 Enabled = false
             };
-            timer.Elapsed += Timer_Elapsed;
             map = new Dictionary<Port, int>();
+            activeProcessId = new HashSet<int>();
+            timer.Elapsed += Timer_Elapsed;
+        }
+
+        public bool IsProcessHasConnect(int processId)
+        {
+            lock(mapLock)
+            {
+                return activeProcessId.Contains(processId);
+            }
         }
 
         public int GetIPPortProcesId(Port p)
@@ -76,15 +85,18 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
             List<UdpProcessRecord> udps = PortProcessMapWrapper.GetAllUdpConnections();
             lock(mapLock)
             {
+                activeProcessId.Clear();
                 foreach (TcpProcessRecord i in tcps)
                 {
                     Port p = new Port(i.LocalAddress, i.LocalPort, TCPUDP.TCP);
                     map[p] = i.ProcessId;
+                    activeProcessId.Add(i.ProcessId);
                 }
                 foreach(UdpProcessRecord i in udps)
                 {
                     Port p = new Port(i.LocalAddress, i.LocalPort, TCPUDP.UDP);
                     map[p] = i.ProcessId;
+                    activeProcessId.Add(i.ProcessId);
                 }
             }
             
@@ -94,6 +106,7 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
         private Timer timer;
         private Dictionary<Port, int> map;
         private readonly object mapLock = new object();
+        private HashSet<int> activeProcessId;
     }
 
     

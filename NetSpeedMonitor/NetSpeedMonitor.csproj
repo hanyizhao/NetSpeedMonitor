@@ -6,7 +6,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{E2E127EA-1E45-427F-A63C-B3327D97BA03}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>USTC.Software.hanyizhao</RootNamespace>
+    <RootNamespace>USTC.Software.hanyizhao.NetSpeedMonitor</RootNamespace>
     <AssemblyName>NetSpeedMonitor</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -104,6 +104,7 @@
     <Compile Include="NetworkStructure.cs" />
     <Compile Include="PortProcessMap.cs" />
     <Compile Include="PortProcessMapWrapper.cs" />
+    <Compile Include="Settings.cs" />
     <Compile Include="Tool.cs" />
     <Compile Include="UDMap.cs" />
     <Compile Include="WinAPIWrapper.cs" />
@@ -146,7 +147,7 @@
     <None Include="NetSpeedMonitor_TemporaryKey.pfx" />
     <None Include="Properties\app.manifest" />
     <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
+      <Generator>PublicSettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>

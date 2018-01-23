@@ -62,6 +62,7 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
                         i.sum = i.downLen + i.upLen;
                     }
                     values.Sort();
+                    HashSet<int> processes = new HashSet<int>();
                     int k = 0;
                     while (k < topMax && k < values.Count)
                     {
@@ -70,23 +71,36 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
                         {
                             break;
                         }
-                        UDOneItem item = new UDOneItem
-                        {
-                            download = values[k].downLen,
-                            upload = values[k].upLen,
-                            processID = ps.processId
-                        };
+                        UDOneItem item = new UDOneItem(ps.processId, values[k].upLen, values[k].downLen);
                         statistic.items.Add(item);
+                        processes.Add(ps.processId);
                         k++;
                     }
+                    k = 0;
+                    while(statistic.items.Count < topMax && k < lastTimeUDItems.Count)
+                    {
+                        UDOneItem item = lastTimeUDItems[k];
+                        
+                        if(item.ProcessID >= 0)
+                        {
+                            if (!processes.Contains(item.ProcessID) && portProcessMap.IsProcessHasConnect(item.ProcessID))
+                            {
+                                statistic.items.Add(new UDOneItem(item.ProcessID, 0, 0));
+                                processes.Add(item.ProcessID);
+                            }
+                        }
+                        k++;
+                    }
+                    
                     if (unKnownDown != 0 || unKnownUp != 0)
                     {
                         //statistic.items.Add(new UDOneItem() { name = "miss", download = unKnownDown, upload = unKnownUp});
                     }
-                    if (noPortStatistic.downLen != 0 || noPortStatistic.upLen != 0)
+                    if (noPortStatistic.downLen != 0 || noPortStatistic.upLen != 0 || (lastTimeUDItems.Count > 0 && lastTimeUDItems[lastTimeUDItems.Count - 1].ProcessID == -1))
                     {
-                        statistic.items.Add(new UDOneItem() { processID = -1, download = noPortStatistic.downLen, upload = noPortStatistic.upLen });
+                        statistic.items.Add(new UDOneItem(-1, noPortStatistic.upLen, noPortStatistic.downLen));
                     }
+                    lastTimeUDItems = new List<UDOneItem>(statistic.items);
                 }
                 noPortStatistic = new PortStatistic();
                 portMap.Clear();
@@ -173,13 +187,25 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
         private long uploadStatistic, downloadStatistic;
         private PortStatistic noPortStatistic = new PortStatistic();
         private Dictionary<Port, PortStatistic> portMap = new Dictionary<Port, PortStatistic>();
+        private List<UDOneItem> lastTimeUDItems = new List<UDOneItem>();
     }
 
     public class UDOneItem
     {
-        public int processID;
-        public long upload;
-        public long download;
+        public int ProcessID { get { return processID; } }
+        public long Upload { get { return upload; } }
+        public long Download { get { return download; } }
+
+        private int processID;
+        private long upload;
+        private long download;
+
+        public UDOneItem(int processID, long upload, long download)
+        {
+            this.processID = processID;
+            this.upload = upload;
+            this.download = download;
+        }
     }
 
     public class UDStatistic

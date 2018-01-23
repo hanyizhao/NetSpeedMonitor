@@ -13,7 +13,8 @@
         Loaded="Window_Loaded"
         MouseEnter="Window_MouseEnter"
         MouseLeave="Window_MouseLeave"
-        Height="300" Width="250" Background="#F7F8FA">
+        MouseMove="Window_MouseMove"
+        Height="290" Width="250" Background="#F7F8FA">
     
     <Window.Resources>
         <WindowChrome x:Key="WindowChromeKey">
@@ -50,8 +51,8 @@
         <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
-                <ColumnDefinition Width="45" />
-                <ColumnDefinition Width="45"/>
+                <ColumnDefinition Width="43" />
+                <ColumnDefinition Width="43"/>
                 <ColumnDefinition Width="5"/>
             </Grid.ColumnDefinitions>
             <Image Grid.Column="1" Source="/images/down.png" Height="12" Margin="0,5,0,0"/>
@@ -75,6 +76,24 @@
                     <Setter Property="VerticalAlignment" Value="Center"/>
                     <Setter Property="Margin" Value="4, 0, 0,0 "/>
                 </Style>
+                <Style TargetType="Label">
+                    <Setter Property="Visibility" Value="Hidden"/>
+                    <Setter Property="Background"  Value="Transparent"/>
+                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                    <Setter Property="VerticalAlignment" Value="Center"/>
+                    <Setter Property="Height" Value="14"/>
+                    <Setter Property="FontSize"  Value="9"/>
+                    <Setter Property="Padding" Value="0"/>
+                    <Setter Property="Margin" Value="2,0,0,0"/>
+                    <Setter Property="Foreground" Value="#64A8E1"/>
+                    <Setter Property="VerticalContentAlignment" Value="Center"/>
+                    <Setter Property="Content" Value="详情"/>
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Foreground" Value="#90C5FF"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
 
             </Grid.Resources>
             <Grid.RowDefinitions>
@@ -95,10 +114,12 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="23"/>
                 <ColumnDefinition/>
-                <ColumnDefinition Width="45"/>
-                <ColumnDefinition Width="45"/>
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="43"/>
+                <ColumnDefinition Width="43"/>
                 <ColumnDefinition Width="5"/>
             </Grid.ColumnDefinitions>
+            
 
         </Grid>
         <Grid Grid.Row="3"/>

@@ -46,12 +46,6 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_099FCE0AF76CF026EAC78C86D6050180"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_AF6B2EE60F62462F871550AF0FFE9D7F"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -59,6 +53,12 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_196E2D51459CF63BC6C7F273C3834A07"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_099FCE0AF76CF026EAC78C86D6050180"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -79,6 +79,22 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.6.1"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.6.1 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.6.1"
+                    }
+                }
+            }
         }
         "Release"
         {
@@ -240,6 +256,17 @@
                 {
                 }
             }
+            "{1525181F-901A-416C-8A58-119130FE478E}:_565F342E4CA248E89E53837180323E1D"
+            {
+            "Name" = "8:#1928"
+            "AlwaysCreate" = "11:FALSE"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Property" = "8:StartupFolder"
+                "Folders"
+                {
+                }
+            }
             "{1525181F-901A-416C-8A58-119130FE478E}:_74332C36C54D4806A5296CF70517DE9B"
             {
             "Name" = "8:#1919"
@@ -290,7 +317,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:NetSpeedMonitor"
         "ProductCode" = "8:{72E63759-23B0-49E9-9C79-27E1BBB6D94F}"
-        "PackageCode" = "8:{712E7131-01C3-4FF7-9793-DF5EF3AF9703}"
+        "PackageCode" = "8:{16D5B691-FA49-4928-89B8-7368AF41D531}"
         "UpgradeCode" = "8:{E0A6FD93-BFA5-4E27-9D33-24971C4969C0}"
         "AspNetVersion" = "8:2.0.50727.0"
         "RestartWWWService" = "11:FALSE"
@@ -420,6 +447,20 @@
             "Transitive" = "11:FALSE"
             "Target" = "8:_AF6B2EE60F62462F871550AF0FFE9D7F"
             "Folder" = "8:_6EE62EFD6FE24307B9E2CD7748635C95"
+            "WorkingFolder" = "8:_4CA1A5EE6F314ED1BF1DB85025AAA75A"
+            "Icon" = "8:_D30A2C10ECE147D88D231731D1E454E8"
+            "Feature" = "8:"
+            }
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_2D1D3D7B15F740E389FD0FA46B5D549C"
+            {
+            "Name" = "8:Net Speed Monitor"
+            "Arguments" = "8:-startup"
+            "Description" = "8:"
+            "ShowCmd" = "3:1"
+            "IconIndex" = "3:0"
+            "Transitive" = "11:FALSE"
+            "Target" = "8:_AF6B2EE60F62462F871550AF0FFE9D7F"
+            "Folder" = "8:_565F342E4CA248E89E53837180323E1D"
             "WorkingFolder" = "8:_4CA1A5EE6F314ED1BF1DB85025AAA75A"
             "Icon" = "8:_D30A2C10ECE147D88D231731D1E454E8"
             "Feature" = "8:"

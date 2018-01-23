@@ -9,7 +9,6 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
 {
     class Tool
     {
-
         public static bool MoveWindowBackToWorkArea(Window window, Thickness padding)
         {
             Rect workArea = SystemParameters.WorkArea;

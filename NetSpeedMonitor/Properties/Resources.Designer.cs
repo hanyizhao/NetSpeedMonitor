@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace USTC.Software.hanyizhao.Properties {
+namespace USTC.Software.hanyizhao.NetSpeedMonitor.Properties {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace USTC.Software.hanyizhao.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("USTC.Software.hanyizhao.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("USTC.Software.hanyizhao.NetSpeedMonitor.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

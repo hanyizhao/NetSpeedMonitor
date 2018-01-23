@@ -42,12 +42,20 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
         private void InitializeContent()
         {
             int rows = ContentGrid.RowDefinitions.Count;
+            canvases = new Canvas[rows];
             icons = new Image[rows];
             names = new TextBlock[rows];
             downs = new TextBlock[rows];
             ups = new TextBlock[rows];
+            labels = new Label[rows];
             for (int i = 0; i < rows; i++)
             {
+                Canvas canvas = new Canvas();
+                Grid.SetRow(canvas, i);
+                Grid.SetColumnSpan(canvas, 6);
+                ContentGrid.Children.Add(canvas);
+                canvases[i] = canvas;
+
                 Image icon = new Image();
                 Grid.SetColumn(icon, 0);
                 Grid.SetRow(icon, i);
@@ -61,8 +69,14 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
                 ContentGrid.Children.Add(name);
                 names[i] = name;
 
+                Label label = new Label();
+                Grid.SetColumn(label, 2);
+                Grid.SetRow(label, i);
+                ContentGrid.Children.Add(label);
+                labels[i] = label;
+
                 TextBlock down = new TextBlock();
-                Grid.SetColumn(down, 2);
+                Grid.SetColumn(down, 3);
                 Grid.SetRow(down, i);
                 down.HorizontalAlignment = HorizontalAlignment.Right;
                 down.VerticalAlignment = VerticalAlignment.Center;
@@ -70,7 +84,7 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
                 downs[i] = down;
 
                 TextBlock up = new TextBlock();
-                Grid.SetColumn(up, 3);
+                Grid.SetColumn(up, 4);
                 Grid.SetRow(up, i);
                 up.HorizontalAlignment = HorizontalAlignment.Right;
                 up.VerticalAlignment = VerticalAlignment.Center;
@@ -113,25 +127,25 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
                 for(int i =0;i < ContentGrid.RowDefinitions.Count && i < items.Count;i++)
                 {
                     UDOneItem item = items[i];
-                    downs[i].Text = Tool.GetNetSpeedString(item.download, timeSpan);
-                    ups[i].Text = Tool.GetNetSpeedString(item.upload, timeSpan);
-                    if(item.processID == -1)
+                    downs[i].Text = Tool.GetNetSpeedString(item.Download, timeSpan);
+                    ups[i].Text = Tool.GetNetSpeedString(item.Upload, timeSpan);
+                    if(item.ProcessID == -1)
                     {
                         names[i].Text = "bridge";
                     }
                     else
                     {
-                        if (!idMap.TryGetValue(item.processID, out ProcessView view))
+                        if (!idMap.TryGetValue(item.ProcessID, out ProcessView view))
                         {
                             view = new ProcessView();
                             Process process = null;
                             try
                             {
-                                process = Process.GetProcessById(item.processID);
+                                process = Process.GetProcessById(item.ProcessID);
                             }
                             catch (Exception)
                             {
-                                view.name = "Process ID: " + item.processID;
+                                view.name = "Process ID: " + item.ProcessID;
                             }
                             if (process != null)
                             {
@@ -141,7 +155,7 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
                                 }
                                 catch (Exception)
                                 {
-                                    view.name = "Process ID: " + item.processID;
+                                    view.name = "Process ID: " + item.ProcessID;
                                 }
                                 try
                                 {
@@ -154,7 +168,7 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
                                     
                                 }
                             }
-                            idMap[item.processID] = view;
+                            idMap[item.ProcessID] = view;
                         }
                         
                         names[i].Text = view.name;
@@ -165,6 +179,7 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
                     }
                 }
             }
+            RefreshDetailButton(Mouse.GetPosition(ContentGrid));
         }
 
         public void OthersWantShow(bool now)
@@ -293,11 +308,43 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
         private void Window_MouseEnter(object sender, MouseEventArgs e)
         {
             OthersWantShow(false);
+            RefreshDetailButton(e.GetPosition(ContentGrid));
         }
 
         private void Window_MouseLeave(object sender, MouseEventArgs e)
         {
             OthersWantHide(false);
+            RefreshDetailButton(e.GetPosition(ContentGrid));
+        }
+
+        private void Window_MouseMove(object sender, MouseEventArgs e)
+        {
+            RefreshDetailButton(e.GetPosition(ContentGrid));
+        }
+
+        private void RefreshDetailButton(Point p)
+        {
+            foreach(var i in labels)
+            {
+                i.Visibility = Visibility.Hidden;
+            }
+            foreach(var i in canvases)
+            {
+                i.Background = null;
+            }
+            if(p.X < 0 || p.Y < 0 || p.X > ContentGrid.ActualHeight || p.Y > ContentGrid.ActualWidth)
+            {
+                return;
+            }
+
+            int row =(int) (p.Y / 20);
+            if(row >= 0 && row < ContentGrid.RowDefinitions.Count && ups[row].Text != null && ups[row].Text != "")
+            {
+                labels[row].Visibility = Visibility.Visible;
+                canvases[row].Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#f4f4f4"));
+            }
+            
+
         }
 
 
@@ -333,7 +380,10 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
         private TextBlock[] names;
         private TextBlock[] ups;
         private TextBlock[] downs;
+        private Label[] labels;
+        private Canvas[] canvases; 
 
+        
         private class ProcessView
         {
             public string name;

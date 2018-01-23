@@ -12,6 +12,7 @@ using System.Timers;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Interop;
+using USTC.Software.hanyizhao.NetSpeedMonitor.Properties;
 
 namespace USTC.Software.hanyizhao.NetSpeedMonitor
 {
@@ -20,14 +21,10 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
     /// </summary>
     public partial class MainWindow : Window
     {
-        public MainWindow()
+        public MainWindow(CaptureDeviceList devices)
         {
-            bool result = InitializeCapture();
-            if (!result)
-            {
-                Application.Current.Shutdown();
-                return;
-            }
+            this.devices = devices;
+            InitializeCapture();
             InitializeComponent();
             InitializeTray();
             InitializeReadSpeedData();
@@ -67,15 +64,53 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
 
         private void InitializeTray()
         {
-            System.Windows.Forms.MenuItem menuExit = new System.Windows.Forms.MenuItem("Exit");
-            System.Windows.Forms.ContextMenu menu = new System.Windows.Forms.ContextMenu(new System.Windows.Forms.MenuItem[] { menuExit });
-            menuExit.Click += MenuExit_Click;
+            System.Windows.Forms.MenuItem menuExit = new System.Windows.Forms.MenuItem("Exit", MenuExit_Click);
+            
+            System.Windows.Forms.MenuItem menuEdgeHide = new System.Windows.Forms.MenuItem("Hide when close to edge", MenuEdgeHide_Click)
+            {
+                Checked = Settings.Default.edgeHide
+            };
+            System.Windows.Forms.MenuItem menuStartOnBoot = new System.Windows.Forms.MenuItem("Start on boot", MenuStartOnBoot_Click)
+            {
+                Checked = Settings.Default.startOnBoot
+            };
+            System.Windows.Forms.MenuItem menuSetting = new System.Windows.Forms.MenuItem("Settings", new System.Windows.Forms.MenuItem[] { menuStartOnBoot, menuEdgeHide });
+            System.Windows.Forms.ContextMenu menu = new System.Windows.Forms.ContextMenu(new System.Windows.Forms.MenuItem[] { menuSetting, menuExit });
+            
             notifyIcon = new System.Windows.Forms.NotifyIcon
             {
                 Icon = new System.Drawing.Icon(Application.GetResourceStream(new Uri("pack://application:,,,/icon.ico", UriKind.RelativeOrAbsolute)).Stream),
                 ContextMenu = menu,
                 Visible = true
             };
+        }
+
+        private void MenuStartOnBoot_Click(object sender, EventArgs e)
+        {
+            if(sender is System.Windows.Forms.MenuItem item)
+            {
+                item.Checked = !item.Checked;
+                Settings.Default.startOnBoot = item.Checked;
+                Settings.Default.Save();
+            }
+        }
+
+        private void MenuEdgeHide_Click(object sender, EventArgs e)
+        {
+            if(sender is System.Windows.Forms.MenuItem item)
+            {
+                item.Checked = !item.Checked;
+                Settings.Default.edgeHide = item.Checked;
+                Settings.Default.Save();
+                if(item.Checked)
+                {
+                    TryToEdgeHide();
+                }
+                else
+                {
+                    TryToEdgeShow();
+                }
+            }
         }
 
         private void MenuExit_Click(object sender, EventArgs e)
@@ -98,18 +133,8 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
             Application.Current.Shutdown();
         }
 
-        private bool InitializeCapture()
+        private void InitializeCapture()
         {
-            try
-            {
-                devices = CaptureDeviceList.Instance;
-            }
-            catch (Exception)
-            {
-                MessageBox.Show("Make sure WinPcap is properly installed on the local machine.[NetSpeedMonitor]");
-                return false;
-            }
-
             lock (lockDevices)
             {
                 if (devices != null)
@@ -123,10 +148,8 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
                         }
                     }
                     RefreshNetworkInformation();
-                    return true;
                 }
             }
-            return false;
         }
 
         private void RefreshNetworkInformation()
@@ -369,34 +392,35 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
 
         private void TryToEdgeHide()
         {
-            if (!isEdgeHide)
+            if(Settings.Default.edgeHide)
             {
-                if (!detailWindow.IsVisible)
+                if (!isEdgeHide)
                 {
-                    if (Top - windowPadding.Top <= 2)
+                    if (!detailWindow.IsVisible)
                     {
-                        Top = -windowPadding.Bottom - Height + edgeHideSpace;
-                        isEdgeHide = true;
-                    }
-                    else if (SystemParameters.PrimaryScreenHeight - (Top + Height + windowPadding.Bottom) <= 2)
-                    {
-                        Top = SystemParameters.PrimaryScreenHeight + windowPadding.Top - edgeHideSpace;
-                        isEdgeHide = true;
-                    }
-                    else if (Left - windowPadding.Left <= 2)
-                    {
-                        Left = -windowPadding.Right - Width + edgeHideSpace;
-                        isEdgeHide = true;
-                    }
-                    else if (SystemParameters.PrimaryScreenWidth - (Left + Width + windowPadding.Right) <= 2)
-                    {
-                        Left = SystemParameters.PrimaryScreenWidth + windowPadding.Left - edgeHideSpace;
-                        isEdgeHide = true;
+                        if (Top - windowPadding.Top <= 2)
+                        {
+                            Top = -windowPadding.Bottom - Height + edgeHideSpace;
+                            isEdgeHide = true;
+                        }
+                        else if (SystemParameters.PrimaryScreenHeight - (Top + Height + windowPadding.Bottom) <= 2)
+                        {
+                            Top = SystemParameters.PrimaryScreenHeight + windowPadding.Top - edgeHideSpace;
+                            isEdgeHide = true;
+                        }
+                        else if (Left - windowPadding.Left <= 2)
+                        {
+                            Left = -windowPadding.Right - Width + edgeHideSpace;
+                            isEdgeHide = true;
+                        }
+                        else if (SystemParameters.PrimaryScreenWidth - (Left + Width + windowPadding.Right) <= 2)
+                        {
+                            Left = SystemParameters.PrimaryScreenWidth + windowPadding.Left - edgeHideSpace;
+                            isEdgeHide = true;
+                        }
                     }
                 }
-
             }
-            
         }
 
         
