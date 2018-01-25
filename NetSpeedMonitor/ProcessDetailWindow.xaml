@@ -1,0 +1,59 @@
+﻿<Window x:Class="USTC.Software.hanyizhao.NetSpeedMonitor.ProcessDetailWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        SourceInitialized="Window_SourceInitialized"
+        Title="Process Detail" Height="202" Width="500" MinWidth="300" MinHeight="202" WindowStartupLocation="CenterScreen">
+
+    <Window.Resources>
+        <Style TargetType="RowDefinition">
+            <Setter Property="Height" Value="30"/>
+        </Style>
+        <Style TargetType="FrameworkElement" x:Key="BaseLabel">
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+        <Style TargetType="FrameworkElement" x:Key="LeftLabel" BasedOn="{StaticResource BaseLabel}">
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="Margin" Value="15, 0, 0, 0"/>
+        </Style>
+
+        <Style TargetType="FrameworkElement" x:Key="RightLabel" BasedOn="{StaticResource BaseLabel}">
+            <Setter Property="Margin" Value="15,0,15,0"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="0, 20, 0, 0" Name="ContentGrid">
+
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+
+        <TextBlock Grid.Row="0" Grid.Column="0" Style="{StaticResource LeftLabel}" Text="PID:"/>
+        <TextBlock Grid.Row="1" Grid.Column="0" Style="{StaticResource LeftLabel}" Text="Name:"/>
+        <TextBlock Grid.Row="2" Grid.Column="0" Style="{StaticResource LeftLabel}" Text="File Path:"/>
+
+        <TextBlock Name="ProcessID" Grid.Row="0" Grid.Column="1" Style="{StaticResource RightLabel}" Text="0" />
+        <DockPanel Grid.Row="1" Grid.Column="1" Style="{StaticResource RightLabel}">
+            <Image Name="ProcessIcon" VerticalAlignment="Center" Height="{Binding ElementName=ProcessName, Path=FontSize}"/>
+            <TextBlock Name="ProcessName" VerticalAlignment="Center" Text="Unknown" />
+        </DockPanel>
+
+        <TextBox Name="ProcessPath" Grid.Row="2" Grid.Column="1" Style="{StaticResource RightLabel}" IsReadOnly="True" />
+        <Button Name="OpenButton" Grid.Row="3" Grid.Column="1" Style="{StaticResource RightLabel}" HorizontalAlignment="Left">
+            <DockPanel>
+                <Image Name="OpenButtonImage" VerticalAlignment="Center" Height="{Binding ElementName=OpenButtonText, Path=FontSize}"/>
+                <TextBlock Name="OpenButtonText" VerticalAlignment="Center" Text="Open Path in File Explorer" />
+            </DockPanel>
+        </Button>
+    </Grid>
+</Window>

@@ -71,7 +71,7 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
                 Checked = Settings.Default.edgeHide
             };
             System.Windows.Forms.MenuItem menuStartOnBoot = new System.Windows.Forms.MenuItem("Start on boot", MenuStartOnBoot_Click)
-            {
+            { 
                 Checked = Settings.Default.startOnBoot
             };
             System.Windows.Forms.MenuItem menuSetting = new System.Windows.Forms.MenuItem("Settings", new System.Windows.Forms.MenuItem[] { menuStartOnBoot, menuEdgeHide });
@@ -113,24 +113,32 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
             }
         }
 
-        private void MenuExit_Click(object sender, EventArgs e)
+        public void TryToExit()
         {
             RegisterAppBar(false);
             Hide();
             detailWindow.OthersWantHide(true);
             timer.Enabled = false;
             notifyIcon.Dispose();
-            lock (lockDevices)
-            {
-                if(devices != null)
+            Application.Current.Shutdown();
+            Thread thread = new Thread(new ThreadStart(() => {
+                lock (lockDevices)
                 {
-                    foreach (ICaptureDevice i in devices)
+                    if (devices != null)
                     {
-                        StopDevice(i);
+                        foreach (ICaptureDevice i in devices)
+                        {
+                            StopDevice(i);
+                        }
                     }
                 }
-            }
-            Application.Current.Shutdown();
+            }));
+            thread.Start();
+        }
+
+        private void MenuExit_Click(object sender, EventArgs e)
+        {
+            TryToExit();
         }
 
         private void InitializeCapture()
@@ -186,12 +194,20 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
 
         private void StopDevice(ICaptureDevice device)
         {
-            if (device.Started)
+            try
             {
-                device.OnPacketArrival -= I_OnPacketArrival;
-                device.StopCapture();
-                device.Close();
+                if (device.Started)
+                {
+                    device.OnPacketArrival -= I_OnPacketArrival;
+                    device.StopCapture();
+                    device.Close();
+                }
             }
+            catch(Exception e)
+            {
+                Console.WriteLine(e);
+            }
+            
         }
 
         private void StartDevice(ICaptureDevice device)
@@ -232,6 +248,11 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
                         protocol = TCPUDP.TCP;
                         sourcePort = tcpPacket.SourcePort;
                         destinationPort = tcpPacket.DestinationPort;
+                        int nowLen = Tool.GetPacketLength(tcpPacket);
+                        if(nowLen != 0)
+                        {
+                            len = nowLen;
+                        }
                     }
                     else
                     {
@@ -240,6 +261,11 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
                         {
                             sourcePort = udpPacket.SourcePort;
                             destinationPort = udpPacket.DestinationPort;
+                            int nowLen = Tool.GetPacketLength(udpPacket);
+                            if (nowLen != 0)
+                            {
+                                len = nowLen;
+                            }
                         }
                     }
                     PacketFlow packetFlow = networkStructure.GetPacketFlow(new NetworkStructure.PackageAddress(sourceAddress, sourcePort, destinationAddress, destinationPort));
@@ -286,6 +312,13 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
             TryToEdgeShow();
         }
 
+        private void SaveLeftAndTopToSettings()
+        {
+            Settings.Default.MainWindowLeft = Left;
+            Settings.Default.MainWindowTop = Top;
+            Settings.Default.Save();
+        }
+
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             detailWindow.OthersWantHide(true);
@@ -293,6 +326,7 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
             oldLeft = Left;
             oldTop = Top;
             DragMove();
+            SaveLeftAndTopToSettings();
         }
 
         private void Window_MouseLeave(object sender, MouseEventArgs e)
@@ -329,6 +363,7 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
             IntPtr handle = (new WindowInteropHelper(this)).Handle;
             HwndSource.FromHwnd(handle).AddHook(new HwndSourceHook(WindowProc));
             RegisterAppBar(true);
+            Console.WriteLine("left:" + Left + "\tTop:" + Top);
         }
 
         private IntPtr WindowProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
@@ -365,7 +400,7 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
         }
 
 
-        private void TryToEdgeShow()
+        public void TryToEdgeShow()
         {
             if(isEdgeHide)
             {
@@ -386,11 +421,12 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
                     Left = SystemParameters.PrimaryScreenWidth - Width - windowPadding.Right;
                 }
                 isEdgeHide = false;
+                SaveLeftAndTopToSettings();
             }
             
         }
 
-        private void TryToEdgeHide()
+        public void TryToEdgeHide()
         {
             if(Settings.Default.edgeHide)
             {
@@ -418,6 +454,7 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
                             Left = SystemParameters.PrimaryScreenWidth + windowPadding.Left - edgeHideSpace;
                             isEdgeHide = true;
                         }
+                        SaveLeftAndTopToSettings();
                     }
                 }
             }
@@ -464,7 +501,7 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
 
         private DetailWindow detailWindow;
         
-        private bool isEdgeHide = false;
+        public bool isEdgeHide = false;
         private double edgeHideSpace = 4;
 
         private double oldLeft, oldTop;

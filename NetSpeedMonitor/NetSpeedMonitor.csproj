@@ -64,7 +64,7 @@
     <ManifestKeyFile>NetSpeedMonitor_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
-    <GenerateManifests>true</GenerateManifests>
+    <GenerateManifests>false</GenerateManifests>
   </PropertyGroup>
   <PropertyGroup>
     <TargetZone>LocalIntranet</TargetZone>
@@ -104,6 +104,10 @@
     <Compile Include="NetworkStructure.cs" />
     <Compile Include="PortProcessMap.cs" />
     <Compile Include="PortProcessMapWrapper.cs" />
+    <Compile Include="ProcessDetailWindow.xaml.cs">
+      <DependentUpon>ProcessDetailWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ProcessView.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="Tool.cs" />
     <Compile Include="UDMap.cs" />
@@ -124,6 +128,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="ProcessDetailWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">

@@ -33,7 +33,7 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
 
         private void DetailWindow_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            if(Visibility == Visibility.Hidden)
+            if (Visibility == Visibility.Hidden)
             {
                 idMap.Clear();
             }
@@ -74,6 +74,7 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
                 Grid.SetRow(label, i);
                 ContentGrid.Children.Add(label);
                 labels[i] = label;
+                label.MouseDown += DetailLabel_MouseDown;
 
                 TextBlock down = new TextBlock();
                 Grid.SetColumn(down, 3);
@@ -93,6 +94,28 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
             }
         }
 
+        private void DetailLabel_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if(sender is Label label)
+            {
+                int row = Grid.GetRow(label);
+                if(row >= 0 && row < localItems.Count)
+                {
+                    int id = localItems[row].ProcessID;
+                    if (idMap.TryGetValue(id, out ProcessView process))
+                    {
+                        ProcessDetailWindow win = new ProcessDetailWindow(process, mainWindow);
+                        win.Show();
+                    }
+                    else
+                    {
+                        ProcessDetailWindow win = new ProcessDetailWindow(id, mainWindow);
+                        win.Show();
+                    }
+                }
+            }
+        }
+
         private void ClearViewContent()
         {
             for (int i = 0; i < ContentGrid.RowDefinitions.Count; i++)
@@ -108,9 +131,9 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
         {
             if (items.Count == 0)
             {
-                for(int i = 0;i < ContentGrid.RowDefinitions.Count;i++)
+                for (int i = 0; i < ContentGrid.RowDefinitions.Count; i++)
                 {
-                    if(names[i].Text == null|| names[i].Text == "")
+                    if (names[i].Text == null || names[i].Text == "")
                     {
                         break;
                     }
@@ -123,13 +146,15 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
             }
             else
             {
+                localItems.Clear();
+                localItems.AddRange(items);
                 ClearViewContent();
-                for(int i =0;i < ContentGrid.RowDefinitions.Count && i < items.Count;i++)
+                for (int i = 0; i < ContentGrid.RowDefinitions.Count && i < items.Count; i++)
                 {
                     UDOneItem item = items[i];
                     downs[i].Text = Tool.GetNetSpeedString(item.Download, timeSpan);
                     ups[i].Text = Tool.GetNetSpeedString(item.Upload, timeSpan);
-                    if(item.ProcessID == -1)
+                    if (item.ProcessID == -1)
                     {
                         names[i].Text = "bridge";
                     }
@@ -137,44 +162,13 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
                     {
                         if (!idMap.TryGetValue(item.ProcessID, out ProcessView view))
                         {
-                            view = new ProcessView();
-                            Process process = null;
-                            try
-                            {
-                                process = Process.GetProcessById(item.ProcessID);
-                            }
-                            catch (Exception)
-                            {
-                                view.name = "Process ID: " + item.ProcessID;
-                            }
-                            if (process != null)
-                            {
-                                try
-                                {
-                                    view.name = process.ProcessName;
-                                }
-                                catch (Exception)
-                                {
-                                    view.name = "Process ID: " + item.ProcessID;
-                                }
-                                try
-                                {
-                                    view.filePath = process.MainModule.FileName;
-                                    view.image = Imaging.CreateBitmapSourceFromHIcon(System.Drawing.Icon.ExtractAssociatedIcon(view.filePath).Handle,
-                                        Int32Rect.Empty, BitmapSizeOptions.FromRotation(Rotation.Rotate0));
-                                }
-                                catch (Exception)
-                                {
-                                    
-                                }
-                            }
+                            view = new ProcessView(item.ProcessID);
                             idMap[item.ProcessID] = view;
                         }
-                        
-                        names[i].Text = view.name;
-                        if (view.image != null)
+                        names[i].Text = view.Name ?? "Process ID: " + view.ID;
+                        if (view.Image != null)
                         {
-                            icons[i].Source = view.image;
+                            icons[i].Source = view.Image;
                         }
                     }
                 }
@@ -324,26 +318,26 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
 
         private void RefreshDetailButton(Point p)
         {
-            foreach(var i in labels)
+            foreach (var i in labels)
             {
                 i.Visibility = Visibility.Hidden;
             }
-            foreach(var i in canvases)
+            foreach (var i in canvases)
             {
                 i.Background = null;
             }
-            if(p.X < 0 || p.Y < 0 || p.X > ContentGrid.ActualHeight || p.Y > ContentGrid.ActualWidth)
+            if (p.X < 0 || p.Y < 0 || p.X > ContentGrid.ActualHeight || p.Y > ContentGrid.ActualWidth)
             {
                 return;
             }
 
-            int row =(int) (p.Y / 20);
-            if(row >= 0 && row < ContentGrid.RowDefinitions.Count && ups[row].Text != null && ups[row].Text != "")
+            int row = (int)(p.Y / 20);
+            if (row >= 0 && row < ContentGrid.RowDefinitions.Count && ups[row].Text != null && ups[row].Text != "")
             {
                 labels[row].Visibility = Visibility.Visible;
                 canvases[row].Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#f4f4f4"));
             }
-            
+
 
         }
 
@@ -381,17 +375,13 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
         private TextBlock[] ups;
         private TextBlock[] downs;
         private Label[] labels;
-        private Canvas[] canvases; 
+        private Canvas[] canvases;
 
-        
-        private class ProcessView
-        {
-            public string name;
-            public string filePath;
-            public ImageSource image;
-        }
+        private List<UDOneItem> localItems = new List<UDOneItem>();
+
+
     }
-
+    
     public class ContentListViewItem
     {
         public string NAME { get; set; }

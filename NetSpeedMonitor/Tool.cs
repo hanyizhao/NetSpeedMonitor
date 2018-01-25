@@ -1,6 +1,10 @@
-﻿using System;
+﻿using PacketDotNet;
+using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 using System.Linq;
+using System.Security.Principal;
 using System.Text;
 using System.Windows;
 using System.Windows.Interop;
@@ -9,6 +13,32 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
 {
     class Tool
     {
+        public static bool IsAdministrator()
+        {
+            WindowsIdentity identity = WindowsIdentity.GetCurrent();
+            WindowsPrincipal principal = new WindowsPrincipal(identity);
+            return principal.IsInRole(WindowsBuiltInRole.Administrator);
+        }
+
+        public static int GetPacketLength(Packet p)
+        {
+            if(p == null)
+            {
+                return 0;
+            }
+            var c = p.PayloadData;
+            if(c != null)
+            {
+                return c.Length;
+            }
+            var d = p.PayloadPacket;
+            if(d != null)
+            {
+                return d.BytesHighPerformance.Length;
+            }
+            return 0;
+        }
+
         public static bool MoveWindowBackToWorkArea(Window window, Thickness padding)
         {
             Rect workArea = SystemParameters.WorkArea;

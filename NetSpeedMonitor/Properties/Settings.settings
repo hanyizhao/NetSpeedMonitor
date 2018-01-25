@@ -8,5 +8,11 @@
     <Setting Name="startOnBoot" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
+    <Setting Name="MainWindowTop" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">-200001</Value>
+    </Setting>
+    <Setting Name="MainWindowLeft" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">-200001</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

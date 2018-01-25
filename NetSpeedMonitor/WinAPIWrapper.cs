@@ -24,7 +24,7 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
         //[DllImport("User32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]   
         //  public static extern void SetWindowLong(IntPtr handle, int oldStyle, long newStyle);  
         public static extern long SetWindowLong(IntPtr handle, int oldStyle, IntPtr newStyle);
-        
+
         /// <summary>  
         /// 获取窗体指定的样式.  
         /// </summary>  
