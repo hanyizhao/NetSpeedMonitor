@@ -81,7 +81,14 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
             lock (lockDevices)
             {
                 DateTime start = DateTime.Now;
-                devices.Refresh();
+                try
+                {
+                    devices.Refresh();
+                }
+                catch(Exception e)
+                {
+                    Console.WriteLine(e.ToString());
+                }
                 DateTime end = DateTime.Now;
                 Console.WriteLine("Refresh Time Cost:" + end.Subtract(start).TotalMilliseconds + "ms");
                 RestartDevices();
