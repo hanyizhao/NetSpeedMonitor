@@ -85,7 +85,7 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
                 try
                 {
                     bool b = p.Start();
-                    mainWindow.TryToExit();
+                    app.TryToExit();
                 }
                 catch(Exception)
                 {

@@ -1,9 +1,11 @@
 ﻿using PacketDotNet;
+using SharpPcap;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Security.Principal;
 using System.Text;
 using System.Windows;
@@ -13,32 +15,61 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
 {
     class Tool
     {
+
+        public static PacketAddress GetPacketAddressFromRowPacket(RawCapture rawCapture, ref int len, ref TCPUDP protocol)
+        {
+            try
+            {
+                len = rawCapture.Data.Length;
+                Packet p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+                IpPacket ipPacket = (IpPacket)p.Extract(typeof(IpPacket));
+                if (ipPacket != null)
+                {
+                    IPAddress sourceAddress, destinationAddress;
+                    sourceAddress = ipPacket.SourceAddress;
+                    destinationAddress = ipPacket.DestinationAddress;
+                    if (sourceAddress.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork
+                        && destinationAddress.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
+                    {
+                        IPProtocolType type = ipPacket.NextHeader;
+                        if (type == IPProtocolType.TCP)
+                        {
+                            TcpPacket tcpPacket = (TcpPacket)ipPacket.Extract(typeof(TcpPacket));
+                            if (tcpPacket != null)
+                            {
+                                protocol = TCPUDP.TCP;
+                                return new PacketAddress(sourceAddress, tcpPacket.SourcePort, destinationAddress, tcpPacket.DestinationPort);
+                            }
+                        }
+                        else if(type == IPProtocolType.UDP)
+                        {
+                            UdpPacket udpPacket = (UdpPacket)ipPacket.Extract(typeof(UdpPacket));
+                            if (udpPacket != null)
+                            {
+                                protocol = TCPUDP.UDP;
+                                return new PacketAddress(sourceAddress, udpPacket.SourcePort, destinationAddress, udpPacket.DestinationPort);
+                            }
+                        }
+                    }
+                }
+                return null;
+            }
+            catch(Exception)
+            {
+                Console.WriteLine("Packet Error");
+                //Console.WriteLine(e.Message + "\n" + e.StackTrace);
+                return null;
+            }
+            
+        }
+
         public static bool IsAdministrator()
         {
             WindowsIdentity identity = WindowsIdentity.GetCurrent();
             WindowsPrincipal principal = new WindowsPrincipal(identity);
             return principal.IsInRole(WindowsBuiltInRole.Administrator);
         }
-
-        public static int GetPacketLength(Packet p)
-        {
-            if(p == null)
-            {
-                return 0;
-            }
-            var c = p.PayloadData;
-            if(c != null)
-            {
-                return c.Length;
-            }
-            var d = p.PayloadPacket;
-            if(d != null)
-            {
-                return d.BytesHighPerformance.Length;
-            }
-            return 0;
-        }
-
+        
         public static bool MoveWindowBackToWorkArea(Window window, Thickness padding)
         {
             Rect workArea = SystemParameters.WorkArea;

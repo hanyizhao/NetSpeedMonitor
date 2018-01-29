@@ -7,7 +7,7 @@ using System.Timers;
 
 namespace USTC.Software.hanyizhao.NetSpeedMonitor
 {
-    class PortProcessMap
+    public class PortProcessMap
     {
         private static PortProcessMap single;
 

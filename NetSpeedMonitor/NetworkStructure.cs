@@ -19,44 +19,7 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
                 this.mask = mask;
             }
         }
-
-        public class PackageAddress
-        {
-            public uint source;
-            public uint destination;
-            public ushort sourcePort;
-            public ushort destinationPort;
-
-            public PackageAddress(IPAddress source, ushort sourcePort, IPAddress destination, ushort destinationPort)
-            {
-                this.source = BitConverter.ToUInt32(source.GetAddressBytes(), 0);
-                this.destination = BitConverter.ToUInt32(destination.GetAddressBytes(), 0);
-                this.sourcePort = sourcePort;
-                this.destinationPort = destinationPort;
-            }
-
-            public override bool Equals(object obj)
-            {
-                if(this == obj)
-                {
-                    return true;
-                }
-                if (obj is PackageAddress y)
-                {
-                    return source == y.source && destination == y.destination
-                        && sourcePort == y.sourcePort && destinationPort == y.destinationPort;
-                }
-                return false;
-            }
-
-            public override int GetHashCode()
-            {
-                return sourcePort * 65536 + destinationPort;
-            }
-        }
-
-       
-
+        
         public NetworkStructure(List<Network> networks)
         {
             Init(networks);
@@ -85,7 +48,7 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
             }
         }
 
-        public PacketFlow GetPacketFlow(PackageAddress address)
+        public PacketFlow GetPacketFlow(PacketAddress address)
         {
             lock(this)
             {
@@ -180,7 +143,39 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
 
         private HashSet<uint> myIPSet = new HashSet<uint>();
         private List<MyNetwork> myNetworks = new List<MyNetwork>();
-        private Dictionary<PackageAddress, PacketFlow> cache = new Dictionary<PackageAddress, PacketFlow>();
+        private Dictionary<PacketAddress, PacketFlow> cache = new Dictionary<PacketAddress, PacketFlow>();
+    }
+
+    public class PacketAddress
+    {
+        public uint source;
+        public uint destination;
+        public ushort sourcePort;
+        public ushort destinationPort;
+
+        public PacketAddress(IPAddress source, ushort sourcePort, IPAddress destination, ushort destinationPort)
+        {
+            this.source = BitConverter.ToUInt32(source.GetAddressBytes(), 0);
+            this.destination = BitConverter.ToUInt32(destination.GetAddressBytes(), 0);
+            this.sourcePort = sourcePort;
+            this.destinationPort = destinationPort;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (this == obj)
+            {
+                return true;
+            }
+            if (obj is PacketAddress y)
+            {
+                return source == y.source && destination == y.destination
+                    && sourcePort == y.sourcePort && destinationPort == y.destinationPort;
+            }
+            return false;
+        }
+
+        public override int GetHashCode() => ((((int)source * 31 + sourcePort) * 31) + (int)destination) * 31 + destinationPort;
     }
 
     public class PacketFlow

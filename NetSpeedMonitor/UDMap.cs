@@ -8,7 +8,7 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
     /// <summary>
     /// Upload and Download Map
     /// </summary>
-    class UDMap
+    public class UDMap
     {
         public UDMap()
         {
@@ -251,12 +251,7 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
             }
             return false;
         }
-        
-        public override int GetHashCode()
-        {
-            return port;
-        }
 
-
+        public override int GetHashCode() => (port * 31 + (int)ip) * 31 + (int)protocol;
     }
 }

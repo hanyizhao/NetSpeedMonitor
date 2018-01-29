@@ -16,6 +16,17 @@
         MouseLeftButtonDown="Window_MouseLeftButtonDown"
         Loaded="Window_Loaded"
         Height="28" Width="132">
+
+    <Window.ContextMenu >
+        <ContextMenu>
+            <MenuItem Header="Settings">
+                <MenuItem Name="WindowMenuStartOnBoot" Header="Start on boot" IsCheckable="True" Click="MenuItem_Click"/>
+                <MenuItem Name="WindowMenuEdgeHide" Header="Hide when close to edge" IsCheckable="True" Click="MenuItem_Click"/>
+            </MenuItem>
+            <MenuItem Name="WindowMenuExit" Header="Exit" Click="MenuItem_Click" />
+        </ContextMenu>
+    </Window.ContextMenu>
+
     <Window.Background>
         <ImageBrush ImageSource="/images/background.png" />
     </Window.Background>
