@@ -8,6 +8,7 @@
         ShowInTaskbar="False"
         WindowStyle="None"
         ResizeMode="NoResize"
+        Loaded="Window_Loaded"
         Topmost="True"
         Background="#606365"
         Title="WelcomeWindow" Height="240" Width="320" WindowStartupLocation="CenterScreen">
@@ -17,6 +18,6 @@
         <TextBlock Text="Monitor" HorizontalAlignment="Left" Margin="116,98,0,0" VerticalAlignment="Top" Height="66" Width="194" FontSize="45" Foreground="#FFC9D1F5"/>
         <TextBlock Text="HanYizhao" HorizontalAlignment="Left" Margin="234,167,0,0" VerticalAlignment="Top" Height="17" Width="69" FontSize="10" Foreground="#BEBEBE"/>
         <TextBlock Text="Loading..." HorizontalAlignment="Left" Margin="27,199,0,0" VerticalAlignment="Top" Height="17" Width="69" FontSize="10" Foreground="#BEBEBE"/>
-
+        <Image Name="ForeImage" Visibility="Hidden"/>
     </Grid>
 </Window>

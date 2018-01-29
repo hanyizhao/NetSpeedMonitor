@@ -79,13 +79,13 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
                     {
                         Dispatcher.InvokeAsync(new Action(() => {
                             InitViewAndNeedCloseResourcees();
-                            Storyboard board = new Storyboard();
+                            //Storyboard board = new Storyboard();
                             //board.Children.Add(new DoubleAnimation(welcomeWindow.Left, mainWindow.Left, TimeSpan.FromMilliseconds(100)) {
                             //    Pro
                             //});
                             //board.Children.Add(new DoubleAnimation(welcomeWindow.Left, mainWindow.Left, TimeSpan.FromMilliseconds(100)));
                             //board.begin
-                            welcomeWindow.Close();
+                            welcomeWindow.ReduceAndClose(new Point(mainWindow.Left + mainWindow.Width / 2, mainWindow.Top + mainWindow.Height / 2));
                         }));
                     }
                 }));

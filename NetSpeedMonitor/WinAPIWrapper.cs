@@ -65,6 +65,12 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
         public static extern uint GetExtendedUdpTable(IntPtr pUdpTable, ref int pdwSize,
             bool bOrder, int ulAf, UdpTableClass tableClass, uint reserved = 0);
 
+        [DllImport("user32.dll", SetLastError = true)]
+        public static extern bool GetWindowRect(IntPtr hwnd, out RECT lpRect);
+
+        [DllImport("user32.dll", SetLastError = true)]
+        public static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, SetWindowPosFlags uFlags);
+
     }
 
     [StructLayout(LayoutKind.Sequential)]
@@ -137,5 +143,38 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
         UDP_TABLE_BASIC,
         UDP_TABLE_OWNER_PID,
         UDP_TABLE_OWNER_MODULE
+    }
+
+    /// <summary>
+    /// Window handles (HWND) used for hWndInsertAfter
+    /// </summary>
+    public enum SpecialWindowHandles : int
+    {
+        NoTopMost = -2,
+        TopMost = -1,
+        Top = 0,
+        Bottom = 1
+    }
+
+    /// <summary>
+    /// SetWindowPos Flags
+    /// </summary>
+    public enum SetWindowPosFlags: uint
+    {
+        NOSIZE = 0x0001,
+        NOMOVE = 0x0002,
+        NOZORDER = 0x0004,
+        NOREDRAW = 0x0008,
+        NOACTIVATE = 0x0010,
+        DRAWFRAME = 0x0020,
+        FRAMECHANGED = 0x0020,
+        SHOWWINDOW = 0x0040,
+        HIDEWINDOW = 0x0080,
+        NOCOPYBITS = 0x0100,
+        NOOWNERZORDER = 0x0200,
+        NOREPOSITION = 0x0200,
+        NOSENDCHANGING = 0x0400,
+        DEFERERASE = 0x2000,
+        ASYNCWINDOWPOS = 0x4000
     }
 }
