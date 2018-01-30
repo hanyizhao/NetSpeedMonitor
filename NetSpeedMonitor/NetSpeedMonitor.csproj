@@ -61,7 +61,8 @@
     <ManifestCertificateThumbprint>E74577D556CBCC51EC6629ED8028142CECAC27E1</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestKeyFile>NetSpeedMonitor_TemporaryKey.pfx</ManifestKeyFile>
+    <ManifestKeyFile>
+    </ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <GenerateManifests>false</GenerateManifests>
