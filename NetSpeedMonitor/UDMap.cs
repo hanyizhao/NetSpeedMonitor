@@ -6,7 +6,7 @@ using System.Linq;
 namespace USTC.Software.hanyizhao.NetSpeedMonitor
 {
     /// <summary>
-    /// Upload and Download Map
+    /// This class stores necessary information of every packets, including <see cref="PacketFlow"/> and length of the packet.
     /// </summary>
     public class UDMap
     {
@@ -16,6 +16,13 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
             lastTime = DateTime.Now;
         }
 
+        /// <summary>
+        /// Get the statistic result. This method analyses the network traffic before this method is called to the last time this method called.
+        /// So invoking this method twice will get different statistic result.
+        /// </summary>
+        /// <param name="topMax">The top N processes.</param>
+        /// <param name="portProcessMap">The relationships of Process and Socket Address</param>
+        /// <returns></returns>
         public UDStatistic NextStatistic(int topMax, PortProcessMap portProcessMap)
         {
             lock(this)
@@ -108,7 +115,11 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
             }
         }
        
-
+        /// <summary>
+        /// When one packet is captured by threads, we store the information in the manager.
+        /// </summary>
+        /// <param name="packet">The information of one packet</param>
+        /// <param name="len">The length of bytes of one packet</param>
         public void AddPacket(PacketFlow packet, int len)
         {
             lock(this)
@@ -174,15 +185,16 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
             }
         }
 
+        /// <summary>
+        /// The statistic information of one socket address. (There are lots of packets from the same socket address or to the same address.)
+        /// </summary>
         private class PortStatistic
         {
             public Port port;
             public long upLen;
             public long downLen;
-            
         }
-
-
+        
         private DateTime lastTime;
         private long uploadStatistic, downloadStatistic;
         private PortStatistic noPortStatistic = new PortStatistic();
@@ -190,10 +202,24 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
         private List<UDOneItem> lastTimeUDItems = new List<UDOneItem>();
     }
 
+    /// <summary>
+    /// The network traffic statistic information of one process.
+    /// </summary>
     public class UDOneItem
     {
+        /// <summary>
+        /// Get the process ID. -1 means maybe there is a NAT. Bacause we can not locate any socket address that belongs to our network cards.
+        /// </summary>
         public int ProcessID { get { return processID; } }
+
+        /// <summary>
+        /// Get the length of the bytes of upload.
+        /// </summary>
         public long Upload { get { return upload; } }
+
+        /// <summary>
+        /// Get the length of the bytes of download.
+        /// </summary>
         public long Download { get { return download; } }
 
         private int processID;
@@ -208,19 +234,43 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
         }
     }
 
+    /// <summary>
+    /// The statistic result.
+    /// </summary>
     public class UDStatistic
     {
+        /// <summary>
+        /// The totoal length of upload bytes.
+        /// </summary>
         public long upload;
+
+        /// <summary>
+        /// The total length of download bytes.
+        /// </summary>
         public long download;
+
+        /// <summary>
+        /// The timespan this statistic considers
+        /// </summary>
         public double timeSpan;
+
+        /// <summary>
+        /// The detail of each process.
+        /// </summary>
         public List<UDOneItem> items = new List<UDOneItem>();
     }
 
+    /// <summary>
+    /// Transport protocol.
+    /// </summary>
     public enum TCPUDP
     {
         TCP, UDP
     }
 
+    /// <summary>
+    /// One socket address, including IP, port and the transport protocol.
+    /// </summary>
     public class Port : ICloneable
     {
         public uint ip;

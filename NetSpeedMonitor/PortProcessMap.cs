@@ -7,10 +7,19 @@ using System.Timers;
 
 namespace USTC.Software.hanyizhao.NetSpeedMonitor
 {
+    /// <summary>
+    /// This class stores the relationships between process ID and socket address.
+    /// These relationships are not real-time and not correct 100%. 
+    /// Because the process sends or receives the packet first, but we capture the packet after. So the process may not be recorded any more by the OS when we call Windows API.
+    /// </summary>
     public class PortProcessMap
     {
         private static PortProcessMap single;
 
+        /// <summary>
+        /// Single Instance
+        /// </summary>
+        /// <returns></returns>
         public static PortProcessMap GetInstance()
         {
             if(single == null)
@@ -20,6 +29,9 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
             return single;
         }
         
+        /// <summary>
+        /// Start or Stop mapping. (Reduce the cost of CPU)
+        /// </summary>
         public bool Enabled
         {
             get
@@ -51,6 +63,11 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
             timer.Elapsed += Timer_Elapsed;
         }
 
+        /// <summary>
+        /// Check whether the process has TCP connection or UDP connection.
+        /// </summary>
+        /// <param name="processId">Process ID</param>
+        /// <returns></returns>
         public bool IsProcessHasConnect(int processId)
         {
             lock(mapLock)
@@ -59,6 +76,11 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
             }
         }
 
+        /// <summary>
+        /// Get the process ID according to the specific socket address.
+        /// </summary>
+        /// <param name="p">Socket Address</param>
+        /// <returns>Process ID. return -1 when we can't find the process ID. Maybe because the process release the TCP or UDP connection immediately.</returns>
         public int GetIPPortProcesId(Port p)
         {
             lock(mapLock)

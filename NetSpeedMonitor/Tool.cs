@@ -15,16 +15,22 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
 {
     class Tool
     {
-
+        /// <summary>
+        /// Get the packet Information from <see cref="RawCapture"/>
+        /// </summary>
+        /// <param name="rawCapture">The raw captured packet</param>
+        /// <param name="len">Get the length of bytes of the packet</param>
+        /// <param name="protocol">Get the tansport protocol of the packet</param>
+        /// <returns>The Addresses of the packet. Null if the packet has error, or it's not IP packet, or It's IPV6.</returns>
         public static PacketAddress GetPacketAddressFromRowPacket(RawCapture rawCapture, ref int len, ref TCPUDP protocol)
         {
             try
             {
-                len = rawCapture.Data.Length;
                 Packet p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
                 IpPacket ipPacket = (IpPacket)p.Extract(typeof(IpPacket));
                 if (ipPacket != null)
                 {
+                    len = ipPacket.PayloadLength;
                     IPAddress sourceAddress, destinationAddress;
                     sourceAddress = ipPacket.SourceAddress;
                     destinationAddress = ipPacket.DestinationAddress;
@@ -63,6 +69,10 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
             
         }
 
+        /// <summary>
+        /// Determines whether the current principal belongs to the Windows user group Administrator.
+        /// </summary>
+        /// <returns></returns>
         public static bool IsAdministrator()
         {
             WindowsIdentity identity = WindowsIdentity.GetCurrent();
@@ -70,6 +80,12 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
             return principal.IsInRole(WindowsBuiltInRole.Administrator);
         }
         
+        /// <summary>
+        /// Make sure the window is in the work area. (Make sure the window is in the screen and doesn't be covered by taskbar.)
+        /// </summary>
+        /// <param name="window">The window smaller than work area.</param>
+        /// <param name="padding">Padding of the window</param>
+        /// <returns>False if work area doesn't contain the window </returns>
         public static bool MoveWindowBackToWorkArea(Window window, Thickness padding)
         {
             Rect workArea = SystemParameters.WorkArea;
@@ -110,6 +126,11 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
             }
         }
 
+        /// <summary>
+        /// Make sure the length of double is short than 4.
+        /// </summary>
+        /// <param name="d"></param>
+        /// <returns></returns>
         private static string DoubleLengthMax4(double d)
         {
             string c = d.ToString();
@@ -124,6 +145,10 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
             return c;
         }
 
+        /// <summary>
+        /// Remove the window from "Alt + TAB list".
+        /// </summary>
+        /// <param name="window">The window</param>
         public static void WindowMissFromMission(Window window)
         {
             WindowInteropHelper helper = new WindowInteropHelper(window);
@@ -132,6 +157,12 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
             Console.WriteLine(WinAPIWrapper.SetWindowLong(helper.Handle, WinAPIWrapper.GWL_EXSTYLE, (IntPtr)old));
         }
 
+        /// <summary>
+        /// Get the network speed.
+        /// </summary>
+        /// <param name="len">The length of bytes of packets</param>
+        /// <param name="timeSpan">Time span in milliseconds</param>
+        /// <returns>The formatted string of network speed.</returns>
         public static string GetNetSpeedString(long len, double timeSpan)
         {
             if (timeSpan <= 0)

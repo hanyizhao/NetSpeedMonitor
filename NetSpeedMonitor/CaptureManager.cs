@@ -9,14 +9,24 @@ using System.Threading.Tasks;
 
 namespace USTC.Software.hanyizhao.NetSpeedMonitor
 {
+    /// <summary>
+    /// This class handles the capture threads.
+    /// </summary>
     public class CaptureManager
     {
-        
+        /// <summary>
+        /// Store packets captured into <see cref="UDMap"/>
+        /// </summary>
+        /// <param name="udMap">Storage</param>
         public CaptureManager(UDMap udMap)
         {
             uploadDownloadMap = udMap;
         }
 
+        /// <summary>
+        /// Start the capture threads. This function cost several minutes.
+        /// </summary>
+        /// <returns>True, success. False, maybe need Winpcap.</returns>
         public bool InitAndStart()
         {
             lock (lockDevices)
@@ -42,6 +52,9 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
             }
         }
 
+        /// <summary>
+        /// Stop capture threads. This function costs several minutes.
+        /// </summary>
         public void Stop()
         {
             lock(lockDevices)
@@ -97,7 +110,7 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
 
         private void RefreshNetworkStructure()
         {
-            List<NetworkStructure.Network> networks = new List<NetworkStructure.Network>();
+            List<Network> networks = new List<Network>();
             NetworkInterface[] networkInterfaces = NetworkInterface.GetAllNetworkInterfaces();
             foreach (NetworkInterface adapter in networkInterfaces)
             {
@@ -112,7 +125,7 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
                             {
                                 if (oneAddress.IPv4Mask != null)
                                 {
-                                    networks.Add(new NetworkStructure.Network(oneAddress.Address, oneAddress.IPv4Mask));
+                                    networks.Add(new Network(oneAddress.Address, oneAddress.IPv4Mask));
                                     Console.WriteLine(adapter.Name);
                                     Console.WriteLine(oneAddress.Address);
 
@@ -179,7 +192,7 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
         private object lockDevices = new object();
         private bool started = false;
         
-        private NetworkStructure networkStructure = new NetworkStructure(new List<NetworkStructure.Network>());
+        private NetworkStructure networkStructure = new NetworkStructure(new List<Network>());
         private DelayRunManager delayRunManager = new DelayRunManager();
         private UDMap uploadDownloadMap;
 

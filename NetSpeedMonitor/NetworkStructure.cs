@@ -6,25 +6,24 @@ using System.Text;
 
 namespace USTC.Software.hanyizhao.NetSpeedMonitor
 {
-    partial class NetworkStructure
+    /// <summary>
+    /// This class stores the structure of network, including IPv4 and subnet mask of each network card.
+    /// </summary>
+    public class NetworkStructure
     {
-        public class Network
-        {
-            public IPAddress ipv4;
-            public IPAddress mask;
-
-            public Network(IPAddress ipv4, IPAddress mask)
-            {
-                this.ipv4 = ipv4;
-                this.mask = mask;
-            }
-        }
-        
+        /// <summary>
+        /// Initialize the network structure.
+        /// </summary>
+        /// <param name="networks">The list of information of network cards.</param>
         public NetworkStructure(List<Network> networks)
         {
             Init(networks);
         }
 
+        /// <summary>
+        /// Refresh the network structure.
+        /// </summary>
+        /// <param name="networks"></param>
         public void RefreshNetworkStructure(List<Network> networks)
         {
             lock (this)
@@ -48,6 +47,11 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
             }
         }
 
+        /// <summary>
+        /// Get the data flow direction of a packet.
+        /// </summary>
+        /// <param name="address">Addresses of a packet</param>
+        /// <returns>Data flow direction</returns>
         public PacketFlow GetPacketFlow(PacketAddress address)
         {
             lock(this)
@@ -146,6 +150,25 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
         private Dictionary<PacketAddress, PacketFlow> cache = new Dictionary<PacketAddress, PacketFlow>();
     }
 
+    /// <summary>
+    /// IPv4 and subnet mask of a network card.
+    /// </summary>
+    public class Network
+    {
+        public IPAddress ipv4;
+        public IPAddress mask;
+
+        public Network(IPAddress ipv4, IPAddress mask)
+        {
+            this.ipv4 = ipv4;
+            this.mask = mask;
+        }
+    }
+
+
+    /// <summary>
+    /// Source address and destion address of a packet.
+    /// </summary>
     public class PacketAddress
     {
         public uint source;
@@ -178,12 +201,34 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
         public override int GetHashCode() => ((((int)source * 31 + sourcePort) * 31) + (int)destination) * 31 + destinationPort;
     }
 
+    /// <summary>
+    /// The necessary information of a packet.
+    /// </summary>
     public class PacketFlow
     {
+        /// <summary>
+        /// The direction of the data flow.
+        /// </summary>
         public FlowType type;
+
+        /// <summary>
+        /// The IP of host. (Maybe there are more than one network card. So the ip of host is dynamic.)
+        /// </summary>
         public uint myIP;
+
+        /// <summary>
+        /// Port of transport protocol.
+        /// </summary>
         public ushort port;
+
+        /// <summary>
+        /// Transport protocol.
+        /// </summary>
         public TCPUDP protocol;
+
+        /// <summary>
+        /// We may capture the packet which souce IP and destination IP don't belong to our host.
+        /// </summary>
         public bool hasIPAndPort;
 
         public override string ToString()
@@ -200,6 +245,9 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
             return sb.ToString();
         }
 
+        /// <summary>
+        /// The direction of a packet. Upload or Download or The packet we should discard.
+        /// </summary>
         public enum FlowType
         {
             UPLOAD, DOWNLOAD, DROP

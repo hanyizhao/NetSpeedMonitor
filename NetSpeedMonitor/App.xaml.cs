@@ -18,10 +18,17 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
     /// App.xaml 的交互逻辑
     /// </summary>
     public partial class App : Application
-    {
+    { 
 
+        /// <summary>
+        /// Make sure there is only one instance.
+        /// </summary>
         private Mutex mutex;
 
+        /// <summary>
+        /// Release the Mutex. It is not necessary to invoke this function when this program is closing.
+        /// It is used when restart. Thus the new process can own the Mutex before the old process release the Mutex.
+        /// </summary>
         public void FreeMutex()
         {
             if(mutex != null)
@@ -41,6 +48,7 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
         {
             if (e.Args.Length > 0)
             {
+                // This arg is used when start on boot. When user set false on "start on boot", the program still starts on boot but then stops immediately.
                 if (e.Args[0] == "-startup")
                 {
                     if (!Settings.Default.startOnBoot)
@@ -49,6 +57,7 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
                         return;
                     }
                 }
+                // These arguments is used when program restart. Will firstly show the window of detail of specific process.
                 else if (e.Args.Length == 2 && e.Args[0] == "-processid")
                 {
                     if (Int32.TryParse(e.Args[1], out int id))
@@ -58,15 +67,16 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
                     }
                 }
             }
-
+            
             mutex = new Mutex(true, "USTC.Software.hanyizhao.NetSpeedMonitor", out bool createNew);
 
+            // There is no instance until now.
             if (createNew)
             {
                 captureManager = new CaptureManager(udMap);
                 welcomeWindow.Show();
                 Thread t = new Thread(new ThreadStart(()=> {
-                    //如果用户按的足够快，先按了exit，那么会先执行Exit，后执行captureManager.InitAndStart()
+                    //如果用户按的足够快，先按了exit，那么会先执行Exit，后执行captureManager.InitAndStart() !!! This is a bug, but it will not trigger unless user is really really fast !!!.
                     if (!captureManager.InitAndStart())
                     {
                         Dispatcher.InvokeAsync(new Action(()=> {
@@ -79,12 +89,6 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
                     {
                         Dispatcher.InvokeAsync(new Action(() => {
                             InitViewAndNeedCloseResourcees();
-                            //Storyboard board = new Storyboard();
-                            //board.Children.Add(new DoubleAnimation(welcomeWindow.Left, mainWindow.Left, TimeSpan.FromMilliseconds(100)) {
-                            //    Pro
-                            //});
-                            //board.Children.Add(new DoubleAnimation(welcomeWindow.Left, mainWindow.Left, TimeSpan.FromMilliseconds(100)));
-                            //board.begin
                             welcomeWindow.ReduceAndClose(new Point(mainWindow.Left + mainWindow.Width / 2, mainWindow.Top + mainWindow.Height / 2));
                         }));
                     }

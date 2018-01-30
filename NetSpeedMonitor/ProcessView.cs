@@ -11,12 +11,34 @@ using System.Windows.Media.Imaging;
 
 namespace USTC.Software.hanyizhao.NetSpeedMonitor
 {
+    /// <summary>
+    /// Some information of a Process, including PID, name, file path and icon.
+    /// </summary>
     public class ProcessView
     {
+        /// <summary>
+        /// PID, not null.
+        /// </summary>
         public int ID { get { return id; } }
+
+        /// <summary>
+        /// Name of the process. Check <see cref="SuccessGetInfo"/> before use.
+        /// </summary>
         public string Name { get { return name; } }
+
+        /// <summary>
+        /// File path of the process. Because of authority problem, Maybe It's null even <see cref="SuccessGetInfo"/> is True.
+        /// </summary>
         public string FilePath { get { return filePath; } }
+
+        /// <summary>
+        /// Icon of the process. Because of authority problem, Maybe It's null even <see cref="SuccessGetInfo"/> is True. Some system process doesn't have icon.
+        /// </summary>
         public ImageSource Image { get { return image; } }
+
+        /// <summary>
+        /// Check If getting information of the process successfully. Maybe it's False when the process ID expired.
+        /// </summary>
         public bool SuccessGetInfo { get { return successGetInfo; } }
 
         private int id;
