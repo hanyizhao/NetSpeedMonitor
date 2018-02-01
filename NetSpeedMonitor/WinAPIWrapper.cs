@@ -8,7 +8,7 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
 {
     class WinAPIWrapper
     {
-        /// <summary>  
+        /// <summary>
         /// window的扩展样式  
         /// </summary>  
         public const int GWL_EXSTYLE = -20;

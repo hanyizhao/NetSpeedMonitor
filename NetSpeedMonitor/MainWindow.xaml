@@ -12,7 +12,6 @@
         MouseEnter="Window_MouseEnter"
         MouseLeftButtonUp="Window_MouseLeftButtonUp"
         MouseLeave="Window_MouseLeave"
-        MouseMove="Window_MouseMove"
         MouseLeftButtonDown="Window_MouseLeftButtonDown"
         Loaded="Window_Loaded"
         Height="28" Width="132">

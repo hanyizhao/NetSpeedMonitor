@@ -130,8 +130,42 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
             }
             InitializeTray();
             mainWindow.Show();
+            CheckScreenCount();
+            Microsoft.Win32.SystemEvents.DisplaySettingsChanged += SystemEvents_DisplaySettingsChanged;
             timer.Elapsed += Timer_Elapsed;
             timer.Enabled = true;
+        }
+
+        private void SystemEvents_DisplaySettingsChanged(object sender, EventArgs e)
+        {
+            Tool.MoveWindowBackToWorkArea(mainWindow, mainWindow.windowPadding);
+            CheckScreenCount();
+        }
+
+        public bool screenLengthMaxOne = false;
+
+        private void CheckScreenCount()
+        {
+            if (System.Windows.Forms.Screen.AllScreens.Length != 1)
+            {
+                if (!screenLengthMaxOne)
+                {
+                    screenLengthMaxOne = true;
+                    menuEdgeHide.Enabled = false;
+                    mainWindow.WindowMenuEdgeHide.IsEnabled = false;
+                    mainWindow.TryToEdgeShow();
+                }
+            }
+            else
+            {
+                if (screenLengthMaxOne)
+                {
+                    screenLengthMaxOne = false;
+                    menuEdgeHide.Enabled = true;
+                    mainWindow.WindowMenuEdgeHide.IsEnabled = true;
+                    mainWindow.TryToEdgeHide();
+                }
+            }
         }
 
         private void DetailWindow_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)

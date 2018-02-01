@@ -26,7 +26,7 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
             InitializeComponent();
             InitializeWindowMenu();
         }
-
+        
         public void SetDetailWindow(DetailWindow detail)
         {
             detailWindow = detail;
@@ -69,10 +69,6 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
             }
         }
         
-        private void Window_MouseMove(object sender, MouseEventArgs e)
-        {
-        }
-
         private void Window_MouseEnter(object sender, MouseEventArgs e)
         {
             detailWindow.OthersWantShow(false);
@@ -88,12 +84,20 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
 
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            detailWindow.OthersWantHide(true);
-            leftPressTime = DateTime.Now;
-            oldLeft = Left;
-            oldTop = Top;
-            DragMove();
-            SaveLeftAndTopToSettings();
+            try
+            {
+                detailWindow.OthersWantHide(true);
+                leftPressTime = DateTime.Now;
+                oldLeft = Left;
+                oldTop = Top;
+                DragMove();
+                SaveLeftAndTopToSettings();
+            }
+            catch(Exception)
+            {
+
+            }
+            
         }
 
         private void Window_MouseLeave(object sender, MouseEventArgs e)
@@ -194,34 +198,41 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
 
         public void TryToEdgeHide()
         {
-            if(Settings.Default.edgeHide)
+            if (Application.Current is App app)
             {
-                if (!isEdgeHide)
+                if (!app.screenLengthMaxOne)
                 {
-                    if (!detailWindow.IsVisible)
+                    if (Settings.Default.edgeHide)
                     {
-                        if (Top - windowPadding.Top <= 2)
+                        if (!isEdgeHide)
                         {
-                            Top = -windowPadding.Bottom - Height + edgeHideSpace;
-                            isEdgeHide = true;
+                            if (!detailWindow.IsVisible)
+                            {
+                                if (Top - windowPadding.Top <= 2)
+                                {
+                                    Top = -windowPadding.Bottom - Height + edgeHideSpace;
+                                    isEdgeHide = true;
+                                }
+                                else if (SystemParameters.PrimaryScreenHeight - (Top + Height + windowPadding.Bottom) <= 2)
+                                {
+                                    Top = SystemParameters.PrimaryScreenHeight + windowPadding.Top - edgeHideSpace;
+                                    isEdgeHide = true;
+                                }
+                                else if (Left - windowPadding.Left <= 2)
+                                {
+                                    Left = -windowPadding.Right - Width + edgeHideSpace;
+                                    isEdgeHide = true;
+                                }
+                                else if (SystemParameters.PrimaryScreenWidth - (Left + Width + windowPadding.Right) <= 2)
+                                {
+                                    Left = SystemParameters.PrimaryScreenWidth + windowPadding.Left - edgeHideSpace;
+                                    isEdgeHide = true;
+                                }
+                                SaveLeftAndTopToSettings();
+                            }
                         }
-                        else if (SystemParameters.PrimaryScreenHeight - (Top + Height + windowPadding.Bottom) <= 2)
-                        {
-                            Top = SystemParameters.PrimaryScreenHeight + windowPadding.Top - edgeHideSpace;
-                            isEdgeHide = true;
-                        }
-                        else if (Left - windowPadding.Left <= 2)
-                        {
-                            Left = -windowPadding.Right - Width + edgeHideSpace;
-                            isEdgeHide = true;
-                        }
-                        else if (SystemParameters.PrimaryScreenWidth - (Left + Width + windowPadding.Right) <= 2)
-                        {
-                            Left = SystemParameters.PrimaryScreenWidth + windowPadding.Left - edgeHideSpace;
-                            isEdgeHide = true;
-                        }
-                        SaveLeftAndTopToSettings();
                     }
+
                 }
             }
         }
