@@ -114,6 +114,7 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
                 mainWindow.Top = Settings.Default.MainWindowTop;
                 Dispatcher.InvokeAsync(new Action(() =>
                 {
+                    Tool.MoveWindowBackToWorkArea(mainWindow, mainWindow.windowPadding);
                     mainWindow.isEdgeHide = true;
                     mainWindow.TryToEdgeShow();
                     mainWindow.TryToEdgeHide();
@@ -132,13 +133,21 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
             mainWindow.Show();
             CheckScreenCount();
             Microsoft.Win32.SystemEvents.DisplaySettingsChanged += SystemEvents_DisplaySettingsChanged;
+            SystemParameters.StaticPropertyChanged += SystemParameters_StaticPropertyChanged;
             timer.Elapsed += Timer_Elapsed;
             timer.Enabled = true;
         }
 
+        private void SystemParameters_StaticPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if(e.PropertyName == "WorkArea")
+            {
+                Tool.MoveWindowBackToWorkArea(mainWindow, mainWindow.windowPadding);
+            }
+        }
+
         private void SystemEvents_DisplaySettingsChanged(object sender, EventArgs e)
         {
-            Tool.MoveWindowBackToWorkArea(mainWindow, mainWindow.windowPadding);
             CheckScreenCount();
         }
 
@@ -208,6 +217,8 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
 
         public void TryToExit()
         {
+            Microsoft.Win32.SystemEvents.DisplaySettingsChanged -= SystemEvents_DisplaySettingsChanged;
+            SystemParameters.StaticPropertyChanged -= SystemParameters_StaticPropertyChanged;
             portProcessMap.Enabled = false;
             mainWindow.RegisterAppBar(false);
             timer.Enabled = false;
