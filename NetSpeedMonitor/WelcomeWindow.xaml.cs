@@ -93,6 +93,7 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
         private void Storyboard_Completed(object sender, EventArgs e)
         {
             Hide();
+            confirmClose = true;
             Dispatcher.InvokeAsync(new Action(() =>
             {
                 Close();
@@ -103,5 +104,15 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
         {
             Tool.WindowMissFromMission(this);
         }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if(!confirmClose)
+            {
+                e.Cancel = true;
+            }
+        }
+
+        private bool confirmClose = false;
     }
 }

@@ -377,6 +377,11 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
         private Label[] labels;
         private Canvas[] canvases;
 
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            e.Cancel = true;
+        }
+
         private List<UDOneItem> localItems = new List<UDOneItem>();
 
 

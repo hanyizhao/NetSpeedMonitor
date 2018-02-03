@@ -9,6 +9,7 @@
         AllowsTransparency="true"
         ResizeMode="NoResize"
         Topmost="True"
+        Closing="Window_Closing"
         MouseEnter="Window_MouseEnter"
         MouseLeftButtonUp="Window_MouseLeftButtonUp"
         MouseLeave="Window_MouseLeave"

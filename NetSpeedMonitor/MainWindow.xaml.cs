@@ -273,6 +273,12 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
         private DateTime leftPressTime = DateTime.Now;
 
         public readonly Thickness windowPadding = new Thickness(-3, 0, -3, -3);
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            e.Cancel = true;
+        }
+
         public readonly Thickness windowMargin = new Thickness(-3, 3, -3, 0);
     }
 }

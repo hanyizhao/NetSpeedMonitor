@@ -7,6 +7,7 @@
         mc:Ignorable="d"
         ShowInTaskbar="False"
         WindowStyle="None"
+        Closing="Window_Closing"
         ResizeMode="NoResize"
         Loaded="Window_Loaded"
         Topmost="True"
