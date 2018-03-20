@@ -1,6 +1,6 @@
 # NetSpeedMonitor
 
-This is a net speed monitor just like 360.
+This is a net speed monitor just like 360 for windows user.
 
 # How to install
 
