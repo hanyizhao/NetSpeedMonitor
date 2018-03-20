@@ -9,7 +9,7 @@ This is a net speed monitor just like 360.
 3. Enjoy.
 
 # Dependencies
-1. .Net Framework 4.5.1 or higher.
+1. .Net Framework 4.5.1.
 2. WinPcap or Npcap.
 
 # Screenshots
@@ -18,3 +18,4 @@ This is a net speed monitor just like 360.
 
 # Bugs
 1. Please do not uninstall WinPcap when the NetSpeedMonitor is running. It may cause the failure of the uninstallation.
+2. To reinstall this program, please firstly uninstall the old program manually.
