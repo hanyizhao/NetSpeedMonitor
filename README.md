@@ -4,7 +4,7 @@ This is a net speed monitor just like 360 for windows user.
 
 ## How to install
 
-1. Download the msi file and install it.
+1. Download the release file and install it. https://github.com/hanyizhao/NetSpeedMonitor/releases/latest
 2. Install the WinPcap. https://www.winpcap.org/
 3. Enjoy.
 
