@@ -1,0 +1,21 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib"
+                    xmlns:local="clr-namespace:USTC.Software.hanyizhao.NetSpeedMonitor">
+
+    <sys:String x:Key="Exit">Exit</sys:String>
+    <sys:String x:Key="StartOnBoot">Start on boot</sys:String>
+    <sys:String x:Key="HideWhenCloseToEdge">Hide when close to edge</sys:String>
+    <sys:String x:Key="Language">Language</sys:String>
+    <sys:String x:Key="UserDefault">User Default</sys:String>
+    <sys:String x:Key="PID_">PID:</sys:String>
+    <sys:String x:Key="Process_Name_">Name:</sys:String>
+    <sys:String x:Key="Process_Path_">File Path:</sys:String>
+    <sys:String x:Key="Process_Detail">Process Detail</sys:String>
+    <sys:String x:Key="Unknown">Unknown</sys:String>
+    <sys:String x:Key="OpenPathInFileExplorer">Open Path in File Explorer</sys:String>
+    <sys:String x:Key="RunAsAdministratorToGetMoreInformation">Run as Administrator to Get More Information</sys:String>
+    <sys:String x:Key="ERROR">ERROR</sys:String>
+    <sys:String x:Key="CantGetInformationOfThisProcessMaybeItsNotRunningNow_">Can't get information of this process. Maybe it's not running now.</sys:String>
+    <sys:String x:Key="Loading_">Loading...</sys:String>
+</ResourceDictionary>

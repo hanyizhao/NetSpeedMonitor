@@ -19,11 +19,12 @@
 
     <Window.ContextMenu >
         <ContextMenu>
-            <MenuItem Header="Settings">
-                <MenuItem Name="WindowMenuStartOnBoot" Header="Start on boot" IsCheckable="True" Click="MenuItem_Click"/>
-                <MenuItem Name="WindowMenuEdgeHide" Header="Hide when close to edge" IsCheckable="True" Click="MenuItem_Click"/>
+            <MenuItem Name="WindowMenuStartOnBoot" Header="{DynamicResource StartOnBoot}" IsCheckable="True" Click="MenuItem_Click"/>
+            <MenuItem Name="WindowMenuEdgeHide" Header="{DynamicResource HideWhenCloseToEdge}" IsCheckable="True" Click="MenuItem_Click"/>
+            <MenuItem Name="WindowMenuLanguage" Header="{DynamicResource Language}">
+                <MenuItem Name="WindowMenuUserDefault" Header="{DynamicResource UserDefault}" IsCheckable="True" Click="MenuItem_ChangeLanguageClick"/>
             </MenuItem>
-            <MenuItem Name="WindowMenuExit" Header="Exit" Click="MenuItem_Click" />
+            <MenuItem Name="WindowMenuExit" Header="{DynamicResource Exit}" Click="MenuItem_Click" />
         </ContextMenu>
     </Window.ContextMenu>
 

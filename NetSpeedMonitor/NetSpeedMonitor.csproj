@@ -105,6 +105,7 @@
     <Compile Include="DetailWindow.xaml.cs">
       <DependentUpon>DetailWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Languages.cs" />
     <Compile Include="NetworkStructure.cs" />
     <Compile Include="PortProcessMap.cs" />
     <Compile Include="PortProcessMapWrapper.cs" />
@@ -136,6 +137,14 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="ProcessDetailWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\StringResource.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\StringResource.zh-CN.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

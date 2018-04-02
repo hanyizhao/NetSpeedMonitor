@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Threading;
@@ -18,7 +19,7 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
     /// App.xaml 的交互逻辑
     /// </summary>
     public partial class App : Application
-    { 
+    {
 
         /// <summary>
         /// Make sure there is only one instance.
@@ -31,13 +32,13 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
         /// </summary>
         public void FreeMutex()
         {
-            if(mutex != null)
+            if (mutex != null)
             {
                 try
                 {
                     mutex.Dispose();
                 }
-                catch(Exception)
+                catch (Exception)
                 {
 
                 }
@@ -46,6 +47,8 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
 
         private void Application_Startup(object sender, StartupEventArgs e)
         {
+
+            InitLanguage();
             if (e.Args.Length > 0)
             {
                 // This arg is used when start on boot. When user set false on "start on boot", the program still starts on boot but then stops immediately.
@@ -67,19 +70,20 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
                     }
                 }
             }
-            
+
             mutex = new Mutex(true, "USTC.Software.hanyizhao.NetSpeedMonitor", out bool createNew);
 
             // There is no instance until now.
             if (createNew)
             {
                 captureManager = new CaptureManager(udMap);
+                welcomeWindow = new WelcomeWindow();
                 welcomeWindow.Show();
-                Thread t = new Thread(new ThreadStart(()=> {
+                Thread t = new Thread(new ThreadStart(() => {
                     //如果用户按的足够快，先按了exit，那么会先执行Exit，后执行captureManager.InitAndStart() !!! This is a bug, but it will not trigger unless user is really really fast !!!.
                     if (!captureManager.InitAndStart())
                     {
-                        Dispatcher.InvokeAsync(new Action(()=> {
+                        Dispatcher.InvokeAsync(new Action(() => {
                             MessageBox.Show("WinPcap is one dependency of NetSpeedMonitor.\nYou can visit https://www.winpcap.org/ to install this software.\nAnd make sure WinPcap is properly installed on the local machine. \n\n[NetSpeedMonitor]");
                             Process.Start("https://www.winpcap.org/");
                             Shutdown();
@@ -100,8 +104,38 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
                 Shutdown();
             }
         }
-        
-        
+
+        private void InitLanguage()
+        {
+            String lanuage = Settings.Default.language;
+            if (lanuage == null || lanuage == "")
+            {
+                ResourceDictionary dictionary = Languages.GetFromDefaultLanguage();
+                if (dictionary != null)
+                {
+                    Resources.MergedDictionaries.Add(dictionary);
+                }
+            }
+            else
+            {
+                ResourceDictionary dictionary = Languages.GetResourceDictionary(lanuage);
+                if (dictionary == null)
+                {
+                    Settings.Default.language = "";
+                    Settings.Default.Save();
+                    dictionary = Languages.GetFromDefaultLanguage();
+                    if (dictionary != null)
+                    {
+                        Resources.MergedDictionaries.Add(dictionary);
+                    }
+                }
+                else
+                {
+                    Resources.MergedDictionaries.Add(dictionary);
+                }
+            }
+        }
+
         private void InitViewAndNeedCloseResourcees()
         {
             mainWindow = new MainWindow();
@@ -140,7 +174,7 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
 
         private void SystemParameters_StaticPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if(e.PropertyName == "WorkArea")
+            if (e.PropertyName == "WorkArea")
             {
                 Tool.MoveWindowBackToWorkArea(mainWindow, mainWindow.windowPadding);
             }
@@ -188,25 +222,80 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
 
         private void InitializeTray()
         {
-            menuExit = new System.Windows.Forms.MenuItem("Exit", TrayMenu_Click);
+            menuExit = new System.Windows.Forms.MenuItem(FindResource("Exit").ToString(), TrayMenu_Click);
 
-            menuEdgeHide = new System.Windows.Forms.MenuItem("Hide when close to edge", TrayMenu_Click)
+            menuEdgeHide = new System.Windows.Forms.MenuItem(FindResource("HideWhenCloseToEdge").ToString(), TrayMenu_Click)
             {
                 Checked = Settings.Default.edgeHide
             };
-            menuStartOnBoot = new System.Windows.Forms.MenuItem("Start on boot", TrayMenu_Click)
+            menuStartOnBoot = new System.Windows.Forms.MenuItem(FindResource("StartOnBoot").ToString(), TrayMenu_Click)
             {
                 Checked = Settings.Default.startOnBoot
             };
-            System.Windows.Forms.MenuItem menuSetting = new System.Windows.Forms.MenuItem("Settings", new System.Windows.Forms.MenuItem[] { menuStartOnBoot, menuEdgeHide });
-            System.Windows.Forms.ContextMenu menu = new System.Windows.Forms.ContextMenu(new System.Windows.Forms.MenuItem[] { menuSetting, menuExit });
+            System.Windows.Forms.MenuItem menuLanguage = new System.Windows.Forms.MenuItem(FindResource("Language").ToString());
+            String nowLanguageFile = Settings.Default.language;
+            System.Windows.Forms.MenuItem menuDefault = new System.Windows.Forms.MenuItem(FindResource("UserDefault").ToString(),
+                TrayMenu_Change_Language_Click)
+            {
+                Tag = ""
+            };
+            menuLanguage.MenuItems.Add(menuDefault);
+            List<OneLanguage> languages = Languages.getLanguages();
+            foreach(OneLanguage i in languages)
+            {
+                System.Windows.Forms.MenuItem menuItem = new System.Windows.Forms.MenuItem()
+                {
+                    Text = i.ShowName,
+                    Checked = i.FileName == nowLanguageFile,
+                    Tag = i.FileName,
+                };
+                menuItem.Click += TrayMenu_Change_Language_Click;
+                menuLanguage.MenuItems.Add(menuItem);
+            }
+            if (nowLanguageFile == null || nowLanguageFile == "")
+            {
+                menuDefault.Checked = true;
+            }
+
+            System.Windows.Forms.ContextMenu menu = new System.Windows.Forms.ContextMenu(new System.Windows.Forms.MenuItem[] { menuStartOnBoot, menuEdgeHide, menuLanguage, menuExit });
 
             notifyIcon = new System.Windows.Forms.NotifyIcon
             {
-                Icon = new System.Drawing.Icon(Application.GetResourceStream(new Uri("pack://application:,,,/icon.ico", UriKind.RelativeOrAbsolute)).Stream),
+                Icon = new System.Drawing.Icon(GetResourceStream(new Uri("pack://application:,,,/icon.ico", UriKind.RelativeOrAbsolute)).Stream),
                 ContextMenu = menu,
                 Visible = true
             };
+        }
+
+        private void TrayMenu_Change_Language_Click(object sender, EventArgs e)
+        {
+            if(sender is System.Windows.Forms.MenuItem i)
+            {
+                if(!i.Checked && i.Tag is String path)
+                {
+                    TryToSetLanguage(path);
+                }
+            }
+        }
+
+        public void TryToSetLanguage(String path)
+        {
+            Settings.Default.language = path;
+            Settings.Default.Save();
+            FreeMutex();
+            string exe = GetType().Assembly.Location;
+            Process p = new Process
+            {
+                StartInfo = new ProcessStartInfo(exe)
+            };
+            try
+            {
+                bool b = p.Start();
+                TryToExit();
+            }
+            catch (Exception)
+            {
+            }
         }
 
         public void TryToSetStartOnBoot(bool startOnBoot)
@@ -282,11 +371,11 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
         private System.Windows.Forms.NotifyIcon notifyIcon;
         private MainWindow mainWindow;
         private DetailWindow detailWindow;
-        private WelcomeWindow welcomeWindow = new WelcomeWindow();
+        private WelcomeWindow welcomeWindow;
         private CaptureManager captureManager;
         private UDMap udMap = new UDMap();
         private PortProcessMap portProcessMap = PortProcessMap.GetInstance();
-        
+
         private System.Timers.Timer timer = new System.Timers.Timer
         {
             Interval = 1000,

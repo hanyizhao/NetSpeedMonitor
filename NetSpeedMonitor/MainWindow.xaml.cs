@@ -10,6 +10,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Timers;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interop;
 using USTC.Software.hanyizhao.NetSpeedMonitor.Properties;
@@ -37,6 +38,43 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
         {
             WindowMenuStartOnBoot.IsChecked = Settings.Default.startOnBoot;
             WindowMenuEdgeHide.IsChecked = Settings.Default.edgeHide;
+            List<OneLanguage> languages = Languages.getLanguages();
+            String nowLanguageFile = Settings.Default.language;
+            foreach(OneLanguage i in languages)
+            {
+                MenuItem menuItem = new MenuItem()
+                {
+                    Header = i.ShowName,
+                    IsCheckable = true,
+                    IsChecked = i.FileName == nowLanguageFile,
+                    Tag = i.FileName,
+                };
+                menuItem.Click += MenuItem_ChangeLanguageClick;
+                WindowMenuLanguage.Items.Add(menuItem);
+            }
+            if(nowLanguageFile == null || nowLanguageFile == "")
+            {
+                WindowMenuUserDefault.IsChecked = true;
+            }
+            WindowMenuUserDefault.Tag = "";
+        }
+
+        private void MenuItem_ChangeLanguageClick(object sender, RoutedEventArgs e)
+        {
+            if (sender is MenuItem menuItem)
+            {
+                if(!menuItem.IsChecked)
+                {
+                    menuItem.IsChecked = true;
+                }
+                else
+                {
+                    if(Application.Current is App app && menuItem.Tag is String path)
+                    {
+                        app.TryToSetLanguage(path);
+                    }
+                }
+            }
         }
 
         private void MenuItem_Click(object sender, RoutedEventArgs e)

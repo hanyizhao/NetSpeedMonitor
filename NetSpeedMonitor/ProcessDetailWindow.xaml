@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         SourceInitialized="Window_SourceInitialized"
-        Title="Process Detail" Height="202" Width="500" MinWidth="300" MinHeight="202" WindowStartupLocation="CenterScreen">
+        Title="{DynamicResource Process_Detail}" Height="202" Width="500" MinWidth="300" MinHeight="202" WindowStartupLocation="CenterScreen">
 
     <Window.Resources>
         <Style TargetType="RowDefinition">
@@ -38,21 +38,21 @@
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
 
-        <TextBlock Grid.Row="0" Grid.Column="0" Style="{StaticResource LeftLabel}" Text="PID:"/>
-        <TextBlock Grid.Row="1" Grid.Column="0" Style="{StaticResource LeftLabel}" Text="Name:"/>
-        <TextBlock Grid.Row="2" Grid.Column="0" Style="{StaticResource LeftLabel}" Text="File Path:"/>
+        <TextBlock Grid.Row="0" Grid.Column="0" Style="{StaticResource LeftLabel}" Text="{DynamicResource PID_}"/>
+        <TextBlock Grid.Row="1" Grid.Column="0" Style="{StaticResource LeftLabel}" Text="{DynamicResource Process_Name_}"/>
+        <TextBlock Grid.Row="2" Grid.Column="0" Style="{StaticResource LeftLabel}" Text="{DynamicResource Process_Path_}"/>
 
         <TextBlock Name="ProcessID" Grid.Row="0" Grid.Column="1" Style="{StaticResource RightLabel}" Text="0" />
         <DockPanel Grid.Row="1" Grid.Column="1" Style="{StaticResource RightLabel}">
             <Image Name="ProcessIcon" VerticalAlignment="Center" Height="{Binding ElementName=ProcessName, Path=FontSize}"/>
-            <TextBlock Name="ProcessName" VerticalAlignment="Center" Text="Unknown" />
+            <TextBlock Name="ProcessName" VerticalAlignment="Center" Text="{DynamicResource Unknown}" />
         </DockPanel>
 
         <TextBox Name="ProcessPath" Grid.Row="2" Grid.Column="1" Style="{StaticResource RightLabel}" IsReadOnly="True" />
         <Button Name="OpenButton" Grid.Row="3" Grid.Column="1" Style="{StaticResource RightLabel}" HorizontalAlignment="Left">
             <DockPanel>
                 <Image Name="OpenButtonImage" VerticalAlignment="Center" Height="{Binding ElementName=OpenButtonText, Path=FontSize}"/>
-                <TextBlock Name="OpenButtonText" VerticalAlignment="Center" Text="Open Path in File Explorer" />
+                <TextBlock Name="OpenButtonText" VerticalAlignment="Center" Text="{DynamicResource OpenPathInFileExplorer}" />
             </DockPanel>
         </Button>
     </Grid>

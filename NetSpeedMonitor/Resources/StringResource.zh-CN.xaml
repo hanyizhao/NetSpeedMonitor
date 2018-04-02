@@ -1,0 +1,21 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib"
+                    xmlns:local="clr-namespace:USTC.Software.hanyizhao.NetSpeedMonitor">
+
+    <sys:String x:Key="Exit">退出</sys:String>
+    <sys:String x:Key="StartOnBoot">开机启动</sys:String>
+    <sys:String x:Key="HideWhenCloseToEdge">靠近屏幕边缘隐藏</sys:String>
+    <sys:String x:Key="Language">语言</sys:String>
+    <sys:String x:Key="UserDefault">用户默认</sys:String>
+    <sys:String x:Key="PID_">进程ID：</sys:String>
+    <sys:String x:Key="Process_Name_">进程名称：</sys:String>
+    <sys:String x:Key="Process_Path_">进程位置：</sys:String>
+    <sys:String x:Key="Process_Detail">进程详情</sys:String>
+    <sys:String x:Key="Unknown">未知</sys:String>
+    <sys:String x:Key="OpenPathInFileExplorer">打开路径</sys:String>
+    <sys:String x:Key="RunAsAdministratorToGetMoreInformation">以管理员身份运行以获取更多信息</sys:String>
+    <sys:String x:Key="ERROR">错误</sys:String>
+    <sys:String x:Key="CantGetInformationOfThisProcessMaybeItsNotRunningNow_">无法获取进程信息。可能该进程已经结束。</sys:String>
+    <sys:String x:Key="Loading_">载入中...</sys:String>
+</ResourceDictionary>
