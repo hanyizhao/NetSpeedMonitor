@@ -18,4 +18,5 @@
     <sys:String x:Key="ERROR">ERROR</sys:String>
     <sys:String x:Key="CantGetInformationOfThisProcessMaybeItsNotRunningNow_">Can't get information of this process. Maybe it's not running now.</sys:String>
     <sys:String x:Key="Loading_">Loading...</sys:String>
+    <sys:String x:Key="more">more</sys:String>
 </ResourceDictionary>

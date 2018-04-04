@@ -88,7 +88,7 @@
                     <Setter Property="Margin" Value="2,0,0,0"/>
                     <Setter Property="Foreground" Value="#64A8E1"/>
                     <Setter Property="VerticalContentAlignment" Value="Center"/>
-                    <Setter Property="Content" Value="详情"/>
+                    <Setter Property="Content" Value="{DynamicResource more}"/>
                     <Style.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
                             <Setter Property="Foreground" Value="#90C5FF"/>
@@ -114,14 +114,12 @@
 
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="23"/>
-                <ColumnDefinition/>
-                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="43"/>
                 <ColumnDefinition Width="43"/>
                 <ColumnDefinition Width="5"/>
             </Grid.ColumnDefinitions>
-            
-
         </Grid>
         <Grid Grid.Row="3"/>
 
