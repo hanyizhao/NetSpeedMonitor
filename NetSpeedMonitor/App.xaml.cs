@@ -174,7 +174,7 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
                 System.Timers.Timer myTimer = new System.Timers.Timer
                 {
                     AutoReset = false,
-                    Interval = 2000
+                    Interval = 20000
                 };
                 myTimer.Elapsed += MyTimer_Elapsed_AutoCheckUpdate;
                 myTimer.Enabled = true;

@@ -15,14 +15,14 @@
     {
         "Entry"
         {
-        "MsmKey" = "8:_3DE968D600899E2DAB0589997095A759"
+        "MsmKey" = "8:_876A3BCDB0C7318A81331485E0A6CCD4"
         "OwnerKey" = "8:_AF6B2EE60F62462F871550AF0FFE9D7F"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_72A851912F78BB1C38614A22E99CCD30"
-        "OwnerKey" = "8:_AF6B2EE60F62462F871550AF0FFE9D7F"
+        "MsmKey" = "8:_876A3BCDB0C7318A81331485E0A6CCD4"
+        "OwnerKey" = "8:_FC1887365591D4247D714950987314E3"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -39,38 +39,38 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_E93A6C32C2429A2A15D7A041E70EB5EF"
+        "MsmKey" = "8:_E7696445A5E31CF2B4ACC524F89448C2"
         "OwnerKey" = "8:_AF6B2EE60F62462F871550AF0FFE9D7F"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_E93A6C32C2429A2A15D7A041E70EB5EF"
-        "OwnerKey" = "8:_72A851912F78BB1C38614A22E99CCD30"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
+        "MsmKey" = "8:_FC1887365591D4247D714950987314E3"
         "OwnerKey" = "8:_AF6B2EE60F62462F871550AF0FFE9D7F"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_72A851912F78BB1C38614A22E99CCD30"
+        "OwnerKey" = "8:_AF6B2EE60F62462F871550AF0FFE9D7F"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_E93A6C32C2429A2A15D7A041E70EB5EF"
+        "OwnerKey" = "8:_FC1887365591D4247D714950987314E3"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_3DE968D600899E2DAB0589997095A759"
+        "OwnerKey" = "8:_876A3BCDB0C7318A81331485E0A6CCD4"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_E7696445A5E31CF2B4ACC524F89448C2"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -168,51 +168,20 @@
         }
         "File"
         {
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_3DE968D600899E2DAB0589997095A759"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_876A3BCDB0C7318A81331485E0A6CCD4"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:PacketDotNet, Version=0.16.0.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_3DE968D600899E2DAB0589997095A759"
+                    "_876A3BCDB0C7318A81331485E0A6CCD4"
                     {
-                    "Name" = "8:Newtonsoft.Json.dll"
+                    "Name" = "8:PacketDotNet.dll"
                     "Attributes" = "3:512"
                     }
                 }
-            "SourcePath" = "8:Newtonsoft.Json.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_4CA1A5EE6F314ED1BF1DB85025AAA75A"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_72A851912F78BB1C38614A22E99CCD30"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:SharpPcap, Version=4.4.0.0, Culture=neutral, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                    "_72A851912F78BB1C38614A22E99CCD30"
-                    {
-                    "Name" = "8:SharpPcap.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:SharpPcap.dll"
+            "SourcePath" = "8:PacketDotNet.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_4CA1A5EE6F314ED1BF1DB85025AAA75A"
@@ -250,20 +219,51 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_E93A6C32C2429A2A15D7A041E70EB5EF"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_E7696445A5E31CF2B4ACC524F89448C2"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:PacketDotNet, Version=0.16.0.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_E93A6C32C2429A2A15D7A041E70EB5EF"
+                    "_E7696445A5E31CF2B4ACC524F89448C2"
                     {
-                    "Name" = "8:PacketDotNet.dll"
+                    "Name" = "8:Newtonsoft.Json.dll"
                     "Attributes" = "3:512"
                     }
                 }
-            "SourcePath" = "8:PacketDotNet.dll"
+            "SourcePath" = "8:Newtonsoft.Json.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_4CA1A5EE6F314ED1BF1DB85025AAA75A"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_FC1887365591D4247D714950987314E3"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:SharpPcap, Version=4.4.0.0, Culture=neutral, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_FC1887365591D4247D714950987314E3"
+                    {
+                    "Name" = "8:SharpPcap.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:SharpPcap.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_4CA1A5EE6F314ED1BF1DB85025AAA75A"
@@ -359,15 +359,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:NetSpeedMonitor"
-        "ProductCode" = "8:{72E63759-23B0-49E9-9C79-27E1BBB6D94F}"
-        "PackageCode" = "8:{16D5B691-FA49-4928-89B8-7368AF41D531}"
+        "ProductCode" = "8:{BAFCE074-E841-4BC1-A4F5-61ECC89D7F00}"
+        "PackageCode" = "8:{DA4E76A2-408C-4F39-8019-B3390358CB85}"
         "UpgradeCode" = "8:{E0A6FD93-BFA5-4E27-9D33-24971C4969C0}"
         "AspNetVersion" = "8:2.0.50727.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.0.11"
+        "ProductVersion" = "8:1.0.12"
         "Manufacturer" = "8:HanYizhao"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
@@ -923,7 +923,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_AF6B2EE60F62462F871550AF0FFE9D7F"
             {
-            "SourcePath" = "8:..\\NetSpeedMonitor\\obj\\Debug\\NetSpeedMonitor.exe"
+            "SourcePath" = "8:..\\NetSpeedMonitor\\obj\\Release\\NetSpeedMonitor.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_4CA1A5EE6F314ED1BF1DB85025AAA75A"
