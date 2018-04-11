@@ -145,6 +145,38 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
             return c;
         }
 
+        public static int compareTwoVersionString(String s1, String s2)
+        {
+            String[] s1List = s1.Split(new char[]{ '.'});
+            String[] s2List = s2.Split(new char[] { '.' });
+            for(int i = 0;i < s1List.Length && i < s2List.Length;i++)
+            {
+                if(int.TryParse(s1List[i], out int i1) && int.TryParse(s2List[i], out int i2))
+                {
+                    if(i1 < i2)
+                    {
+                        return -1;
+                    }
+                    else if(i1 > i2)
+                    {
+                        return 1;
+                    }
+                }
+            }
+            if(s1List.Length < s2List.Length)
+            {
+                return -1;
+            }
+            else if(s1List.Length > s2List.Length)
+            {
+                return 1;
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
         /// <summary>
         /// Remove the window from "Alt + TAB list".
         /// </summary>

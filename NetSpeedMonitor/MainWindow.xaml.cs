@@ -57,6 +57,7 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
                 WindowMenuUserDefault.IsChecked = true;
             }
             WindowMenuUserDefault.Tag = "";
+            WindowMenuAutoUpdate.IsChecked = Settings.Default.AutoUpdate;
         }
 
         private void MenuItem_ChangeLanguageClick(object sender, RoutedEventArgs e)
@@ -79,32 +80,36 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
 
         private void MenuItem_Click(object sender, RoutedEventArgs e)
         {
-            if (sender == WindowMenuExit)
+            if (Application.Current is App app)
             {
-                if (Application.Current is App app)
+                if (sender == WindowMenuExit)
                 {
                     app.TryToExit();
                 }
-            }
-            else if (sender == WindowMenuStartOnBoot)
-            {
-                bool startOnBoot = WindowMenuStartOnBoot.IsChecked;
-                if (Application.Current is App app)
+                else if (sender == WindowMenuStartOnBoot)
                 {
+                    bool startOnBoot = WindowMenuStartOnBoot.IsChecked;
                     app.menuStartOnBoot.Checked = startOnBoot;
                     app.TryToSetStartOnBoot(startOnBoot);
                 }
-            }
-            else if (sender == WindowMenuEdgeHide)
-            {
-                bool edgeHide = WindowMenuEdgeHide.IsChecked;
-                if (Application.Current is App app)
+                else if (sender == WindowMenuEdgeHide)
                 {
+                    bool edgeHide = WindowMenuEdgeHide.IsChecked;
                     app.menuEdgeHide.Checked = edgeHide;
                     app.TryToSetEdgeHide(edgeHide);
                 }
-
+                else if (sender == WindowMenuAutoUpdate)
+                {
+                    bool autoUpdate = WindowMenuAutoUpdate.IsChecked;
+                    app.menuAutoUpdate.Checked = autoUpdate;
+                    app.TryToSetAutoUpdate(autoUpdate);
+                }
+                else if(sender == WindowMenuCheckUpdate)
+                {
+                    app.TryToCheckUpdate();
+                }
             }
+            
         }
         
         private void Window_MouseEnter(object sender, MouseEventArgs e)

@@ -3,6 +3,7 @@
                     xmlns:sys="clr-namespace:System;assembly=mscorlib"
                     xmlns:local="clr-namespace:USTC.Software.hanyizhao.NetSpeedMonitor">
 
+    <sys:String x:Key="AppName">Net Speed Monitor</sys:String>
     <sys:String x:Key="Exit">Exit</sys:String>
     <sys:String x:Key="StartOnBoot">Start on boot</sys:String>
     <sys:String x:Key="HideWhenCloseToEdge">Hide when close to edge</sys:String>
@@ -19,4 +20,10 @@
     <sys:String x:Key="CantGetInformationOfThisProcessMaybeItsNotRunningNow_">Can't get information of this process. Maybe it's not running now.</sys:String>
     <sys:String x:Key="Loading_">Loading...</sys:String>
     <sys:String x:Key="more">more</sys:String>
+    <sys:String x:Key="Update">Update</sys:String>
+    <sys:String x:Key="CheckForUpdates">Check for updates</sys:String>
+    <sys:String x:Key="CheckForUpdatesAutomatically">Check for updates automatically</sys:String>
+    <sys:String x:Key="IsUpToDate">is Up to date!</sys:String>
+    <sys:String x:Key="FindNewVersion">Find new version:</sys:String>
+    <sys:String x:Key="UpgradeToNewVersion">Upgrade to new version?</sys:String>
 </ResourceDictionary>

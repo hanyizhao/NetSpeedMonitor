@@ -47,7 +47,6 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
 
         private void Application_Startup(object sender, StartupEventArgs e)
         {
-
             InitLanguage();
             if (e.Args.Length > 0)
             {
@@ -170,6 +169,34 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
             SystemParameters.StaticPropertyChanged += SystemParameters_StaticPropertyChanged;
             timer.Elapsed += Timer_Elapsed;
             timer.Enabled = true;
+            if(Settings.Default.AutoUpdate)
+            {
+                System.Timers.Timer myTimer = new System.Timers.Timer
+                {
+                    AutoReset = false,
+                    Interval = 2000
+                };
+                myTimer.Elapsed += MyTimer_Elapsed_AutoCheckUpdate;
+                myTimer.Enabled = true;
+            }
+        }
+
+        private void MyTimer_Elapsed_AutoCheckUpdate(object sender, ElapsedEventArgs e)
+        {
+            try
+            {
+                System.Net.NetworkInformation.Ping ping = new System.Net.NetworkInformation.Ping();
+                System.Net.NetworkInformation.PingReply pr = ping.Send("www.baidu.com", 12000);
+                if (pr.Status == System.Net.NetworkInformation.IPStatus.Success)
+                {
+                    checkUpdateManager.CheckForUpdates(false);
+                }
+            }
+            catch(Exception e2)
+            {
+                Console.WriteLine(e2.ToString());
+            }
+
         }
 
         private void SystemParameters_StaticPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -256,8 +283,15 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
             {
                 menuDefault.Checked = true;
             }
-
-            System.Windows.Forms.ContextMenu menu = new System.Windows.Forms.ContextMenu(new System.Windows.Forms.MenuItem[] { menuStartOnBoot, menuEdgeHide, menuLanguage, menuExit });
+            menuAutoUpdate = new System.Windows.Forms.MenuItem(FindResource("CheckForUpdatesAutomatically").ToString(), TrayMenu_Click)
+            {
+                Checked = Settings.Default.AutoUpdate
+            };
+            menuCheckUpdate = new System.Windows.Forms.MenuItem(FindResource("CheckForUpdates").ToString(), TrayMenu_Click);
+            System.Windows.Forms.MenuItem menuUpdate = new System.Windows.Forms.MenuItem(FindResource("Update").ToString());
+            menuUpdate.MenuItems.Add(menuAutoUpdate);
+            menuUpdate.MenuItems.Add(menuCheckUpdate);
+            System.Windows.Forms.ContextMenu menu = new System.Windows.Forms.ContextMenu(new System.Windows.Forms.MenuItem[] { menuStartOnBoot, menuEdgeHide, menuLanguage,menuUpdate, menuExit });
 
             notifyIcon = new System.Windows.Forms.NotifyIcon
             {
@@ -296,6 +330,17 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
             catch (Exception)
             {
             }
+        }
+
+        public void TryToSetAutoUpdate(bool autoUpdate)
+        {
+            Settings.Default.AutoUpdate = autoUpdate;
+            Settings.Default.Save();
+        }
+
+        public void TryToCheckUpdate()
+        {
+            checkUpdateManager.CheckForUpdates(true);
         }
 
         public void TryToSetStartOnBoot(bool startOnBoot)
@@ -350,6 +395,16 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
                 mainWindow.WindowMenuEdgeHide.IsChecked = menuEdgeHide.Checked;
                 TryToSetEdgeHide(menuEdgeHide.Checked);
             }
+            else if(sender == menuAutoUpdate)
+            {
+                menuAutoUpdate.Checked = !menuAutoUpdate.Checked;
+                mainWindow.WindowMenuAutoUpdate.IsChecked = menuAutoUpdate.Checked;
+                TryToSetAutoUpdate(menuAutoUpdate.Checked);
+            }
+            else if(sender == menuCheckUpdate)
+            {
+                TryToCheckUpdate();
+            }
         }
 
         private void Timer_Elapsed(object sender, ElapsedEventArgs e)
@@ -366,7 +421,7 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
             }));
         }
 
-        public System.Windows.Forms.MenuItem menuExit, menuEdgeHide, menuStartOnBoot;
+        public System.Windows.Forms.MenuItem menuExit, menuEdgeHide, menuStartOnBoot, menuAutoUpdate, menuCheckUpdate;
 
         private System.Windows.Forms.NotifyIcon notifyIcon;
         private MainWindow mainWindow;
@@ -375,6 +430,7 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
         private CaptureManager captureManager;
         private UDMap udMap = new UDMap();
         private PortProcessMap portProcessMap = PortProcessMap.GetInstance();
+        private CheckUpdateManager checkUpdateManager = new CheckUpdateManager();
 
         private System.Timers.Timer timer = new System.Timers.Timer
         {
