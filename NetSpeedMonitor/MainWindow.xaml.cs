@@ -108,6 +108,10 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
                 {
                     app.TryToCheckUpdate();
                 }
+                else if(sender == WindowMenuAbout)
+                {
+                    app.TryToShowAboutWindow();
+                }
             }
             
         }

@@ -1,0 +1,10 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System.Windows.Media;assembly=PresentationCore"
+                    xmlns:local="clr-namespace:USTC.Software.hanyizhao.NetSpeedMonitor">
+
+    <sys:SolidColorBrush x:Key="LogoBackground" Color="#606365" />
+    <sys:SolidColorBrush x:Key="LogoNetForeground" Color="#FFFF9F00"/>
+    <sys:SolidColorBrush x:Key="LogoMonitorForeground" Color="#FFC9D1F5"/>
+    <sys:SolidColorBrush x:Key="LogoAutherNameForeground" Color="#BEBEBE"/>
+</ResourceDictionary>

@@ -104,6 +104,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AboutWindow.xaml.cs">
+      <DependentUpon>AboutWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="CaptureManager.cs" />
     <Compile Include="CheckUpdateManager.cs" />
     <Compile Include="DelayRunManager.cs" />
@@ -125,6 +128,10 @@
       <DependentUpon>WelcomeWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="WinAPIWrapper.cs" />
+    <Page Include="AboutWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="DetailWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -142,6 +149,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="ProcessDetailWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\ColorResource.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

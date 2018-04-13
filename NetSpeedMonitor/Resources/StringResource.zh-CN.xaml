@@ -25,4 +25,7 @@
     <sys:String x:Key="IsUpToDate">已是最新版！</sys:String>
     <sys:String x:Key="FindNewVersion">发现新版本：</sys:String>
     <sys:String x:Key="UpgradeToNewVersion">升级到新版本？</sys:String>
+    <sys:String x:Key="AboutNetSpeedMonitor">关于 Net Speed Monitor</sys:String>
+    <sys:String x:Key="OK">确定</sys:String>
+    <sys:String x:Key="Version">版本</sys:String>
 </ResourceDictionary>

@@ -78,11 +78,13 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
                 captureManager = new CaptureManager(udMap);
                 welcomeWindow = new WelcomeWindow();
                 welcomeWindow.Show();
-                Thread t = new Thread(new ThreadStart(() => {
+                Thread t = new Thread(new ThreadStart(() =>
+                {
                     //如果用户按的足够快，先按了exit，那么会先执行Exit，后执行captureManager.InitAndStart() !!! This is a bug, but it will not trigger unless user is really really fast !!!.
                     if (!captureManager.InitAndStart())
                     {
-                        Dispatcher.InvokeAsync(new Action(() => {
+                        Dispatcher.InvokeAsync(new Action(() =>
+                        {
                             MessageBox.Show("WinPcap is one dependency of NetSpeedMonitor.\nYou can visit https://www.winpcap.org/ to install this software.\nAnd make sure WinPcap is properly installed on the local machine. \n\n[NetSpeedMonitor]");
                             Process.Start("https://www.winpcap.org/");
                             Shutdown();
@@ -90,7 +92,8 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
                     }
                     else
                     {
-                        Dispatcher.InvokeAsync(new Action(() => {
+                        Dispatcher.InvokeAsync(new Action(() =>
+                        {
                             InitViewAndNeedCloseResourcees();
                             welcomeWindow.ReduceAndClose(new Point(mainWindow.Left + mainWindow.Width / 2, mainWindow.Top + mainWindow.Height / 2));
                         }));
@@ -169,7 +172,7 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
             SystemParameters.StaticPropertyChanged += SystemParameters_StaticPropertyChanged;
             timer.Elapsed += Timer_Elapsed;
             timer.Enabled = true;
-            if(Settings.Default.AutoUpdate)
+            if (Settings.Default.AutoUpdate)
             {
                 System.Timers.Timer myTimer = new System.Timers.Timer
                 {
@@ -192,7 +195,7 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
                     checkUpdateManager.CheckForUpdates(false);
                 }
             }
-            catch(Exception e2)
+            catch (Exception e2)
             {
                 Console.WriteLine(e2.ToString());
             }
@@ -268,7 +271,7 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
             };
             menuLanguage.MenuItems.Add(menuDefault);
             List<OneLanguage> languages = Languages.getLanguages();
-            foreach(OneLanguage i in languages)
+            foreach (OneLanguage i in languages)
             {
                 System.Windows.Forms.MenuItem menuItem = new System.Windows.Forms.MenuItem()
                 {
@@ -291,7 +294,10 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
             System.Windows.Forms.MenuItem menuUpdate = new System.Windows.Forms.MenuItem(FindResource("Update").ToString());
             menuUpdate.MenuItems.Add(menuAutoUpdate);
             menuUpdate.MenuItems.Add(menuCheckUpdate);
-            System.Windows.Forms.ContextMenu menu = new System.Windows.Forms.ContextMenu(new System.Windows.Forms.MenuItem[] { menuStartOnBoot, menuEdgeHide, menuLanguage,menuUpdate, menuExit });
+
+            menuAbout = new System.Windows.Forms.MenuItem(FindResource("AboutNetSpeedMonitor").ToString(), TrayMenu_Click);
+            System.Windows.Forms.ContextMenu menu = new System.Windows.Forms.ContextMenu(new System.Windows.Forms.MenuItem[] {
+                menuStartOnBoot, menuEdgeHide, menuLanguage, menuUpdate, menuAbout, menuExit });
 
             notifyIcon = new System.Windows.Forms.NotifyIcon
             {
@@ -303,9 +309,9 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
 
         private void TrayMenu_Change_Language_Click(object sender, EventArgs e)
         {
-            if(sender is System.Windows.Forms.MenuItem i)
+            if (sender is System.Windows.Forms.MenuItem i)
             {
-                if(!i.Checked && i.Tag is String path)
+                if (!i.Checked && i.Tag is String path)
                 {
                     TryToSetLanguage(path);
                 }
@@ -347,6 +353,12 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
         {
             Settings.Default.startOnBoot = startOnBoot;
             Settings.Default.Save();
+        }
+
+        public void TryToShowAboutWindow()
+        {
+            AboutWindow aboutWindow = new AboutWindow();
+            aboutWindow.Show();
         }
 
         public void TryToExit()
@@ -395,15 +407,19 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
                 mainWindow.WindowMenuEdgeHide.IsChecked = menuEdgeHide.Checked;
                 TryToSetEdgeHide(menuEdgeHide.Checked);
             }
-            else if(sender == menuAutoUpdate)
+            else if (sender == menuAutoUpdate)
             {
                 menuAutoUpdate.Checked = !menuAutoUpdate.Checked;
                 mainWindow.WindowMenuAutoUpdate.IsChecked = menuAutoUpdate.Checked;
                 TryToSetAutoUpdate(menuAutoUpdate.Checked);
             }
-            else if(sender == menuCheckUpdate)
+            else if (sender == menuCheckUpdate)
             {
                 TryToCheckUpdate();
+            }
+            else if(sender == menuAbout)
+            {
+                TryToShowAboutWindow();
             }
         }
 
@@ -421,7 +437,7 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
             }));
         }
 
-        public System.Windows.Forms.MenuItem menuExit, menuEdgeHide, menuStartOnBoot, menuAutoUpdate, menuCheckUpdate;
+        public System.Windows.Forms.MenuItem menuExit, menuEdgeHide, menuStartOnBoot, menuAutoUpdate, menuCheckUpdate, menuAbout;
 
         private System.Windows.Forms.NotifyIcon notifyIcon;
         private MainWindow mainWindow;

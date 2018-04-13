@@ -69,6 +69,13 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
             
         }
 
+        public static String GetVersion()
+        {
+            String nowVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            int lastDot = nowVersion.LastIndexOf('.');
+            return nowVersion.Substring(0, lastDot) + nowVersion.Substring(lastDot + 1);
+        }
+
         /// <summary>
         /// Determines whether the current principal belongs to the Windows user group Administrator.
         /// </summary>

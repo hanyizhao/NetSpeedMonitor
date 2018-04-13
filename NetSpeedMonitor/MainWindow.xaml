@@ -28,6 +28,7 @@
                 <MenuItem Name="WindowMenuAutoUpdate" Header="{DynamicResource CheckForUpdatesAutomatically}" IsCheckable="True" Click="MenuItem_Click"/>
                 <MenuItem Name="WindowMenuCheckUpdate" Header="{DynamicResource CheckForUpdates}" Click="MenuItem_Click"/>
             </MenuItem>
+            <MenuItem Name="WindowMenuAbout" Header="{DynamicResource AboutNetSpeedMonitor}" Click="MenuItem_Click" />
             <MenuItem Name="WindowMenuExit" Header="{DynamicResource Exit}" Click="MenuItem_Click" />
         </ContextMenu>
     </Window.ContextMenu>

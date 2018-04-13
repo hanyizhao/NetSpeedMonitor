@@ -53,11 +53,8 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
                             String value = reader.ReadToEnd();
                             JObject jo = (JObject)JsonConvert.DeserializeObject(value);
                             String tag_name = jo["tag_name"].ToString();
-                            String nowVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
-                            int lastDot = nowVersion.LastIndexOf('.');
-                            nowVersion = nowVersion.Substring(0, lastDot) + nowVersion.Substring(lastDot + 1);
                             String appName = Application.Current.FindResource("AppName").ToString();
-                            if (Tool.compareTwoVersionString(tag_name, nowVersion) > 0)
+                            if (Tool.compareTwoVersionString(tag_name, Tool.GetVersion()) > 0)
                             {
                                 MessageBoxResult result = MessageBox.Show(Application.Current.FindResource("FindNewVersion").ToString()
                                     + tag_name + "\n" + Application.Current.FindResource("UpgradeToNewVersion").ToString(),

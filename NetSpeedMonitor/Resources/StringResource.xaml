@@ -26,4 +26,7 @@
     <sys:String x:Key="IsUpToDate">is Up to date!</sys:String>
     <sys:String x:Key="FindNewVersion">Find new version:</sys:String>
     <sys:String x:Key="UpgradeToNewVersion">Upgrade to new version?</sys:String>
+    <sys:String x:Key="AboutNetSpeedMonitor">About Net Speed Monitor</sys:String>
+    <sys:String x:Key="OK">OK</sys:String>
+    <sys:String x:Key="Version">Version</sys:String>
 </ResourceDictionary>
