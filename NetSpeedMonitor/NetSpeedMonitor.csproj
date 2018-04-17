@@ -104,39 +104,39 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="AboutWindow.xaml.cs">
+    <Compile Include="View\AboutWindow.xaml.cs">
       <DependentUpon>AboutWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="CaptureManager.cs" />
-    <Compile Include="CheckUpdateManager.cs" />
-    <Compile Include="DelayRunManager.cs" />
-    <Compile Include="DetailWindow.xaml.cs">
+    <Compile Include="Service\CaptureManager.cs" />
+    <Compile Include="Service\CheckUpdateManager.cs" />
+    <Compile Include="Service\DelayRunManager.cs" />
+    <Compile Include="View\DetailWindow.xaml.cs">
       <DependentUpon>DetailWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Languages.cs" />
-    <Compile Include="NetworkStructure.cs" />
-    <Compile Include="PortProcessMap.cs" />
-    <Compile Include="PortProcessMapWrapper.cs" />
-    <Compile Include="ProcessDetailWindow.xaml.cs">
+    <Compile Include="Service\Languages.cs" />
+    <Compile Include="Service\NetworkStructure.cs" />
+    <Compile Include="Service\PortProcessMap.cs" />
+    <Compile Include="Service\PortProcessMapWrapper.cs" />
+    <Compile Include="View\ProcessDetailWindow.xaml.cs">
       <DependentUpon>ProcessDetailWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ProcessView.cs" />
+    <Compile Include="View\ProcessView.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="Tool.cs" />
-    <Compile Include="UDMap.cs" />
-    <Compile Include="WelcomeWindow.xaml.cs">
+    <Compile Include="Service\UDMap.cs" />
+    <Compile Include="View\WelcomeWindow.xaml.cs">
       <DependentUpon>WelcomeWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="WinAPIWrapper.cs" />
-    <Page Include="AboutWindow.xaml">
+    <Compile Include="Service\WinAPIWrapper.cs" />
+    <Page Include="View\AboutWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="DetailWindow.xaml">
+    <Page Include="View\DetailWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="MainWindow.xaml">
+    <Page Include="View\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -144,11 +144,11 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MainWindow.xaml.cs">
+    <Compile Include="View\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="ProcessDetailWindow.xaml">
+    <Page Include="View\ProcessDetailWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -164,7 +164,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="WelcomeWindow.xaml">
+    <Page Include="View\WelcomeWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -215,5 +215,6 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
