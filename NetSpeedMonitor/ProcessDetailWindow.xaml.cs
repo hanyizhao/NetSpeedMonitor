@@ -36,13 +36,13 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
             ProcessID.Text = process.ID + "";
             if (process.SuccessGetInfo)
             {
-                ProcessName.Text = process.Name ?? Application.Current.FindResource("Unknown").ToString();
+                ProcessName.Text = process.Name ?? Tool.GetStringResource("Unknown");
                 ProcessIcon.Source = process.Image;
                 if (process.FilePath == null && !Tool.IsAdministrator())
                 {
                     OpenButtonImage.Source = Imaging.CreateBitmapSourceFromHIcon(SystemIcons.Shield.Handle,
                         Int32Rect.Empty, BitmapSizeOptions.FromRotation(Rotation.Rotate0));
-                    OpenButtonText.Text = Application.Current.FindResource("RunAsAdministratorToGetMoreInformation").ToString();
+                    OpenButtonText.Text = Tool.GetStringResource("RunAsAdministratorToGetMoreInformation");
                     OpenButton.Click += OpenButton_RunAsAdmin_Click;
                 }
                 else
@@ -103,8 +103,8 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
             {
                 Dispatcher.InvokeAsync(new Action(() =>
                 {
-                    MessageBox.Show(Application.Current.FindResource("CantGetInformationOfThisProcessMaybeItsNotRunningNow_").ToString(),
-                        Application.Current.FindResource("ERROR").ToString());
+                    MessageBox.Show(Tool.GetStringResource("CantGetInformationOfThisProcessMaybeItsNotRunningNow_"),
+                        Tool.GetStringResource("ERROR"));
                 }));
             }
         }

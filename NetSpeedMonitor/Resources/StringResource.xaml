@@ -29,4 +29,5 @@
     <sys:String x:Key="AboutNetSpeedMonitor">About Net Speed Monitor</sys:String>
     <sys:String x:Key="OK">OK</sys:String>
     <sys:String x:Key="Version">Version</sys:String>
+    <sys:String x:Key="CurrentVersion">Current Version:</sys:String>
 </ResourceDictionary>

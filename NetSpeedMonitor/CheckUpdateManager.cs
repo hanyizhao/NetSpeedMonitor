@@ -53,13 +53,15 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
                             String value = reader.ReadToEnd();
                             JObject jo = (JObject)JsonConvert.DeserializeObject(value);
                             String tag_name = jo["tag_name"].ToString();
-                            String appName = Application.Current.FindResource("AppName").ToString();
-                            if (Tool.compareTwoVersionString(tag_name, Tool.GetVersion()) > 0)
+                            String appName = Tool.GetStringResource("AppName");
+                            String currentVersion = Tool.GetVersion();
+                            if (Tool.CompareTwoVersionString(tag_name, currentVersion) > 0)
                             {
-                                MessageBoxResult result = MessageBox.Show(Application.Current.FindResource("FindNewVersion").ToString()
-                                    + tag_name + "\n" + Application.Current.FindResource("UpgradeToNewVersion").ToString(),
+                                MessageBoxResult result = MessageBox.Show(Tool.GetStringResource("FindNewVersion") + tag_name
+                                    + "\n" + Tool.GetStringResource("CurrentVersion") + currentVersion
+                                    + "\n" + Tool.GetStringResource("UpgradeToNewVersion"),
                                     appName, MessageBoxButton.OKCancel, MessageBoxImage.Question);
-                                if(result == MessageBoxResult.OK)
+                                if (result == MessageBoxResult.OK)
                                 {
                                     System.Diagnostics.Process.Start("https://github.com/hanyizhao/NetSpeedMonitor/releases/latest");
                                 }
@@ -68,7 +70,7 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
                             {
                                 if (showNoUpdateWindow)
                                 {
-                                    MessageBox.Show(appName + " " + Application.Current.FindResource("IsUpToDate").ToString(), appName);
+                                    MessageBox.Show(appName + " " + Tool.GetStringResource("IsUpToDate"), appName);
                                 }
                             }
                         }
@@ -80,7 +82,7 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
             {
                 Application.Current.Dispatcher.Invoke(new Action(() =>
                 {
-                    MessageBox.Show(e.ToString(), Application.Current.FindResource("CheckForUpdates").ToString(), MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show(e.ToString(), Tool.GetStringResource("CheckForUpdates"), MessageBoxButton.OK, MessageBoxImage.Error);
                 }));
             }
             lock (lockCheck)

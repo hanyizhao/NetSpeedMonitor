@@ -69,6 +69,30 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
             
         }
 
+        /// <summary>
+        /// Get string resource
+        /// </summary>
+        /// <param name="key">key</param>
+        /// <returns>the value or NULL</returns>
+        public static String GetStringResource(String key)
+        {
+            object val = Application.Current.TryFindResource(key);
+            if(val == null)
+            {
+                return "NULL";
+            }
+            else
+            {
+                return val.ToString();
+            }
+        }
+
+        /// <summary>
+        /// Get version of the setup program.
+        /// Strictly, the version of assembly is different from setup version.
+        /// So we transfer from 1.0.1.1 to 1.0.11.
+        /// </summary>
+        /// <returns></returns>
         public static String GetVersion()
         {
             String nowVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
@@ -152,7 +176,7 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
             return c;
         }
 
-        public static int compareTwoVersionString(String s1, String s2)
+        public static int CompareTwoVersionString(String s1, String s2)
         {
             String[] s1List = s1.Split(new char[]{ '.'});
             String[] s2List = s2.Split(new char[] { '.' });
