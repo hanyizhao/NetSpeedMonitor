@@ -64,7 +64,7 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
                 {
                     if (Int32.TryParse(e.Args[1], out int id))
                     {
-                        ProcessDetailWindow w = new ProcessDetailWindow(id, null);
+                        ProcessDetailWindow w = new ProcessDetailWindow(id);
                         Dispatcher.InvokeAsync(new Action(() => { w.Show(); }));
                     }
                 }
@@ -94,7 +94,7 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
                     {
                         Dispatcher.InvokeAsync(new Action(() =>
                         {
-                            InitViewAndNeedCloseResourcees();
+                            InitViewAndNeedClosedResourcees();
                             welcomeWindow.ReduceAndClose(new Point(mainWindow.Left + mainWindow.Width / 2, mainWindow.Top + mainWindow.Height / 2));
                         }));
                     }
@@ -138,12 +138,9 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
             }
         }
 
-        private void InitViewAndNeedCloseResourcees()
+        private void InitViewAndNeedClosedResourcees()
         {
             mainWindow = new MainWindow();
-            detailWindow = new DetailWindow(mainWindow);
-            mainWindow.SetDetailWindow(detailWindow);
-            detailWindow.IsVisibleChanged += DetailWindow_IsVisibleChanged;
             if (Settings.Default.MainWindowLeft > -200000 && Settings.Default.MainWindowTop > -200000)
             {
                 mainWindow.Left = Settings.Default.MainWindowLeft;
@@ -241,12 +238,15 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
             }
         }
 
-        private void DetailWindow_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        public void NeedPortProcessMap(object sender, bool need)
         {
-            portProcessMap.Enabled = detailWindow.IsVisible;
-            if (!detailWindow.IsVisible)
+            if (need)
             {
-                mainWindow.TryToEdgeHide();
+                portProcessMap.RegisterCustomer(sender);
+            }
+            else
+            {
+                portProcessMap.UnRegisterCustomer(sender);
             }
         }
 
@@ -257,6 +257,10 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
             menuEdgeHide = new System.Windows.Forms.MenuItem(FindResource("HideWhenCloseToEdge").ToString(), TrayMenu_Click)
             {
                 Checked = Settings.Default.edgeHide
+            };
+            menuShowTrayIcon = new System.Windows.Forms.MenuItem(FindResource("ShowTrayIcon").ToString(), TrayMenu_Click)
+            {
+                Checked = Settings.Default.ShowTrayIcon
             };
             menuStartOnBoot = new System.Windows.Forms.MenuItem(FindResource("StartOnBoot").ToString(), TrayMenu_Click)
             {
@@ -270,7 +274,7 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
                 Tag = ""
             };
             menuLanguage.MenuItems.Add(menuDefault);
-            List<OneLanguage> languages = Languages.getLanguages();
+            List<OneLanguage> languages = Languages.GetLanguages();
             foreach (OneLanguage i in languages)
             {
                 System.Windows.Forms.MenuItem menuItem = new System.Windows.Forms.MenuItem()
@@ -297,13 +301,13 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
 
             menuAbout = new System.Windows.Forms.MenuItem(FindResource("AboutNetSpeedMonitor").ToString(), TrayMenu_Click);
             System.Windows.Forms.ContextMenu menu = new System.Windows.Forms.ContextMenu(new System.Windows.Forms.MenuItem[] {
-                menuStartOnBoot, menuEdgeHide, menuLanguage, menuUpdate, menuAbout, menuExit });
+                menuStartOnBoot, menuEdgeHide,menuShowTrayIcon, menuLanguage, menuUpdate, menuAbout, menuExit });
 
             notifyIcon = new System.Windows.Forms.NotifyIcon
             {
                 Icon = new System.Drawing.Icon(GetResourceStream(new Uri("pack://application:,,,/icon.ico", UriKind.RelativeOrAbsolute)).Stream),
                 ContextMenu = menu,
-                Visible = true
+                Visible = Settings.Default.ShowTrayIcon
             };
         }
 
@@ -365,7 +369,6 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
         {
             Microsoft.Win32.SystemEvents.DisplaySettingsChanged -= SystemEvents_DisplaySettingsChanged;
             SystemParameters.StaticPropertyChanged -= SystemParameters_StaticPropertyChanged;
-            portProcessMap.Enabled = false;
             mainWindow.RegisterAppBar(false);
             timer.Enabled = false;
             notifyIcon.Dispose();
@@ -373,6 +376,13 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
             Shutdown();
             Thread t = new Thread(captureManager.Stop);
             t.Start();
+        }
+
+        public void TryToSetShowTrayIcon(bool showTrayIcon)
+        {
+            Settings.Default.ShowTrayIcon = showTrayIcon;
+            Settings.Default.Save();
+            notifyIcon.Visible = showTrayIcon;
         }
 
         public void TryToSetEdgeHide(bool edgeHide)
@@ -407,6 +417,12 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
                 mainWindow.WindowMenuEdgeHide.IsChecked = menuEdgeHide.Checked;
                 TryToSetEdgeHide(menuEdgeHide.Checked);
             }
+            else if(sender == menuShowTrayIcon)
+            {
+                menuShowTrayIcon.Checked = !menuShowTrayIcon.Checked;
+                mainWindow.WindowMenuShowTrayIcon.IsChecked = menuShowTrayIcon.Checked;
+                TryToSetShowTrayIcon(menuShowTrayIcon.Checked);
+            }
             else if (sender == menuAutoUpdate)
             {
                 menuAutoUpdate.Checked = !menuAutoUpdate.Checked;
@@ -428,20 +444,14 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
             UDStatistic statistics = udMap.NextStatistic(10, portProcessMap);
             Dispatcher.Invoke(new Action(() =>
             {
-                mainWindow.UploadLabel.Content = Tool.GetNetSpeedString(statistics.upload, statistics.timeSpan);
-                mainWindow.DownloadLabel.Content = Tool.GetNetSpeedString(statistics.download, statistics.timeSpan);
-                if (detailWindow.Visibility == Visibility.Visible)
-                {
-                    detailWindow.NewData(statistics.items, statistics.timeSpan);
-                }
+                mainWindow.NewData(statistics);
             }));
         }
 
-        public System.Windows.Forms.MenuItem menuExit, menuEdgeHide, menuStartOnBoot, menuAutoUpdate, menuCheckUpdate, menuAbout;
+        public System.Windows.Forms.MenuItem menuExit, menuEdgeHide, menuShowTrayIcon, menuStartOnBoot, menuAutoUpdate, menuCheckUpdate, menuAbout;
 
         private System.Windows.Forms.NotifyIcon notifyIcon;
         private MainWindow mainWindow;
-        private DetailWindow detailWindow;
         private WelcomeWindow welcomeWindow;
         private CaptureManager captureManager;
         private UDMap udMap = new UDMap();

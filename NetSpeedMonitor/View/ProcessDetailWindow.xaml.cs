@@ -23,14 +23,13 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
     /// </summary>
     public partial class ProcessDetailWindow : Window
     {
-        public ProcessDetailWindow(int id, MainWindow mainWindow) : this(new ProcessView(id), mainWindow)
+        public ProcessDetailWindow(int id) : this(new ProcessView(id))
         {
 
         }
 
-        public ProcessDetailWindow(ProcessView tempP, MainWindow mainWindow)
+        public ProcessDetailWindow(ProcessView tempP)
         {
-            this.mainWindow = mainWindow;
             this.process = tempP;
             InitializeComponent();
             ProcessID.Text = process.ID + "";
@@ -95,7 +94,6 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
         }
 
         private ProcessView process;
-        private MainWindow mainWindow;
 
         private void Window_SourceInitialized(object sender, EventArgs e)
         {

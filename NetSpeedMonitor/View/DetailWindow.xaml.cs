@@ -21,9 +21,9 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
     /// </summary>
     public partial class DetailWindow : Window
     {
-        public DetailWindow(MainWindow mainWindow)
+        public DetailWindow(ICanMoveDetailWindowToRightPlace canMove)
         {
-            this.mainWindow = mainWindow;
+            this.canMove = canMove;
             asynShow = new Run(AsynShow);
             asynHide = new Run(AsynHide);
             InitializeComponent();
@@ -36,6 +36,10 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
             if (Visibility == Visibility.Hidden)
             {
                 idMap.Clear();
+            }
+            if(Application.Current is App app)
+            {
+                app.NeedPortProcessMap(this, this.IsVisible);
             }
         }
 
@@ -104,12 +108,12 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
                     int id = localItems[row].ProcessID;
                     if (idMap.TryGetValue(id, out ProcessView process))
                     {
-                        ProcessDetailWindow win = new ProcessDetailWindow(process, mainWindow);
+                        ProcessDetailWindow win = new ProcessDetailWindow(process);
                         win.Show();
                     }
                     else
                     {
-                        ProcessDetailWindow win = new ProcessDetailWindow(id, mainWindow);
+                        ProcessDetailWindow win = new ProcessDetailWindow(id);
                         win.Show();
                     }
                 }
@@ -217,64 +221,10 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
                 }
             }
         }
-
-        private void MoveToSafePlace()
-        {
-            Thickness pa = mainWindow.windowMargin;
-            Rect mainRect = new Rect(mainWindow.Left - pa.Left, mainWindow.Top - pa.Top,
-                mainWindow.Width + pa.Left + pa.Right, mainWindow.Height + pa.Top + pa.Bottom);
-            Rect workArea = SystemParameters.WorkArea;
-            if (workArea.Bottom - mainRect.Bottom >= Height)//bellow
-            {
-                Top = mainRect.Bottom;
-                if (mainRect.Left + Width <= workArea.Right)
-                {
-                    Left = mainRect.Left;
-                }
-                else
-                {
-                    Left = mainRect.Right - Width;
-                }
-
-            }
-            else if (mainRect.Top - workArea.Top >= Height)//top
-            {
-                Top = mainRect.Top - Height;
-                if (mainRect.Left + Width <= workArea.Right)
-                {
-                    Left = mainRect.Left;
-                }
-                else
-                {
-                    Left = mainRect.Right - Width;
-                }
-            }
-            else//left or right
-            {
-                if (mainRect.Right + Width <= workArea.Right)//right
-                {
-                    Left = mainRect.Right;
-                }
-                else
-                {
-                    Left = mainRect.Left - Width;//left
-                }
-                if (mainRect.Top + Height <= workArea.Bottom)
-                {
-                    Top = mainRect.Top;
-                }
-                else
-                {
-                    Top = workArea.Bottom - Height;
-                }
-            }
-
-
-        }
-
+        
         private void MyShow()
         {
-            MoveToSafePlace();
+            canMove.MoveDetailWindowToRightPlace(this);
             Show();
         }
 
@@ -343,7 +293,7 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
 
 
 
-        private MainWindow mainWindow;
+        private ICanMoveDetailWindowToRightPlace canMove;
 
         private Run asynShow, asynHide;
 
@@ -392,5 +342,10 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
         public string NAME { get; set; }
         public string DOWNLOAD { get; set; }
         public string UPLOAD { get; set; }
+    }
+
+    public interface ICanMoveDetailWindowToRightPlace
+    {
+        void MoveDetailWindowToRightPlace(DetailWindow dw);
     }
 }

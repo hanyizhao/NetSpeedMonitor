@@ -21,6 +21,7 @@
         <ContextMenu>
             <MenuItem Name="WindowMenuStartOnBoot" Header="{DynamicResource StartOnBoot}" IsCheckable="True" Click="MenuItem_Click"/>
             <MenuItem Name="WindowMenuEdgeHide" Header="{DynamicResource HideWhenCloseToEdge}" IsCheckable="True" Click="MenuItem_Click"/>
+            <MenuItem Name="WindowMenuShowTrayIcon" Header="{DynamicResource ShowTrayIcon}" IsCheckable="True" Click="MenuItem_Click"/>
             <MenuItem Name="WindowMenuLanguage" Header="{DynamicResource Language}">
                 <MenuItem Name="WindowMenuUserDefault" Header="{DynamicResource UserDefault}" IsCheckable="True" Click="MenuItem_ChangeLanguageClick"/>
             </MenuItem>

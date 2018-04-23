@@ -359,15 +359,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:NetSpeedMonitor"
-        "ProductCode" = "8:{BAFCE074-E841-4BC1-A4F5-61ECC89D7F00}"
-        "PackageCode" = "8:{DA4E76A2-408C-4F39-8019-B3390358CB85}"
+        "ProductCode" = "8:{C0BE2BE8-AC1A-41FD-9C36-15E14FCCDD5B}"
+        "PackageCode" = "8:{97B8A5DE-9F9F-4679-9BAB-3AE84E7BFE95}"
         "UpgradeCode" = "8:{E0A6FD93-BFA5-4E27-9D33-24971C4969C0}"
         "AspNetVersion" = "8:2.0.50727.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.0.12"
+        "ProductVersion" = "8:1.0.13"
         "Manufacturer" = "8:HanYizhao"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
@@ -923,7 +923,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_AF6B2EE60F62462F871550AF0FFE9D7F"
             {
-            "SourcePath" = "8:..\\NetSpeedMonitor\\obj\\Release\\NetSpeedMonitor.exe"
+            "SourcePath" = "8:..\\NetSpeedMonitor\\obj\\Debug\\NetSpeedMonitor.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_4CA1A5EE6F314ED1BF1DB85025AAA75A"

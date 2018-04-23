@@ -30,7 +30,7 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
         }
         
         /// <summary>
-        /// Start or Stop mapping. (Reduce the cost of CPU)
+        /// Check whether this class is working.
         /// </summary>
         public bool Enabled
         {
@@ -41,12 +41,46 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
                     return timer.Enabled;
                 }
             }
-            set
+        }
+        
+        /// <summary>
+        /// Let this class know that the object needs this class.
+        /// </summary>
+        /// <param name="customer">the object that needs this class</param>
+        public void RegisterCustomer(object customer)
+        {
+            lock (timerLock)
             {
-                lock(timerLock)
-                {
-                    timer.Enabled = value;
-                }
+                Console.WriteLine("PortProessMap Add Customer");
+                customers.Add(customer);
+                CheckTimer();
+            }
+        }
+
+        /// <summary>
+        /// Let this class know that the object does not need this class any more.(Reduce the cost of CPU)
+        /// </summary>
+        /// <param name="customer">the object that does not need this class</param>
+        public void UnRegisterCustomer(object customer)
+        {
+            lock(timerLock)
+            {
+                Console.WriteLine("PortProessMap Remove Customer");
+                customers.Remove(customer);
+                CheckTimer();
+            }
+        }
+
+        private void CheckTimer()
+        {
+            Console.WriteLine("PortProcessMap CheckTimer count:" + customers.Count);
+            if(customers.Count == 0)
+            {
+                timer.Enabled = false;
+            }
+            else
+            {
+                timer.Enabled = true;
             }
         }
         
@@ -124,6 +158,7 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
             
         }
 
+        private HashSet<object> customers = new HashSet<object>();
         private readonly object timerLock = new object();
         private Timer timer;
         private Dictionary<Port, int> map;

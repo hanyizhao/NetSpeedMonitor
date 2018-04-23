@@ -20,25 +20,40 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
     /// <summary>
     /// MainWindow.xaml 的交互逻辑
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, ICanMoveDetailWindowToRightPlace
     {
         public MainWindow()
         {
             InitializeComponent();
             InitializeWindowMenu();
+            detailWindow = new DetailWindow(this);
+            detailWindow.IsVisibleChanged += DetailWindow_IsVisibleChanged;
         }
-        
-        public void SetDetailWindow(DetailWindow detail)
+
+        private void DetailWindow_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            detailWindow = detail;
+            if(detailWindow.Visibility == Visibility.Hidden)
+            {
+                TryToEdgeHide();
+            }
         }
-        
+
+        public void NewData(UDStatistic statistics)
+        {
+            UploadLabel.Content = Tool.GetNetSpeedString(statistics.upload, statistics.timeSpan);
+            DownloadLabel.Content = Tool.GetNetSpeedString(statistics.download, statistics.timeSpan);
+            if (detailWindow.Visibility == Visibility.Visible)
+            {
+                detailWindow.NewData(statistics.items, statistics.timeSpan);
+            }
+        }
         
         private void InitializeWindowMenu()
         {
             WindowMenuStartOnBoot.IsChecked = Settings.Default.startOnBoot;
             WindowMenuEdgeHide.IsChecked = Settings.Default.edgeHide;
-            List<OneLanguage> languages = Languages.getLanguages();
+            WindowMenuShowTrayIcon.IsChecked = Settings.Default.ShowTrayIcon;
+            List<OneLanguage> languages = Languages.GetLanguages();
             String nowLanguageFile = Settings.Default.language;
             foreach(OneLanguage i in languages)
             {
@@ -47,7 +62,7 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
                     Header = i.ShowName,
                     IsCheckable = true,
                     IsChecked = i.FileName == nowLanguageFile,
-                    Tag = i.FileName,
+                    Tag = i.FileName
                 };
                 menuItem.Click += MenuItem_ChangeLanguageClick;
                 WindowMenuLanguage.Items.Add(menuItem);
@@ -97,6 +112,12 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
                     bool edgeHide = WindowMenuEdgeHide.IsChecked;
                     app.menuEdgeHide.Checked = edgeHide;
                     app.TryToSetEdgeHide(edgeHide);
+                }
+                else if(sender == WindowMenuShowTrayIcon)
+                {
+                    bool showTrayIcon = WindowMenuShowTrayIcon.IsChecked;
+                    app.menuShowTrayIcon.Checked = showTrayIcon;
+                    app.TryToSetShowTrayIcon(showTrayIcon);
                 }
                 else if (sender == WindowMenuAutoUpdate)
                 {
@@ -324,6 +345,58 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             e.Cancel = true;
+        }
+
+        void ICanMoveDetailWindowToRightPlace.MoveDetailWindowToRightPlace(DetailWindow dw)
+        {
+            Thickness pa = windowMargin;
+            Rect mainRect = new Rect(Left - pa.Left, Top - pa.Top,
+                Width + pa.Left + pa.Right, Height + pa.Top + pa.Bottom);
+            Rect workArea = SystemParameters.WorkArea;
+            if (workArea.Bottom - mainRect.Bottom >= dw.Height)//bellow
+            {
+                dw.Top = mainRect.Bottom;
+                if (mainRect.Left + dw.Width <= workArea.Right)
+                {
+                    dw.Left = mainRect.Left;
+                }
+                else
+                {
+                    dw.Left = mainRect.Right - dw.Width;
+                }
+
+            }
+            else if (mainRect.Top - workArea.Top >= dw.Height)//top
+            {
+                dw.Top = mainRect.Top - dw.Height;
+                if (mainRect.Left + dw.Width <= workArea.Right)
+                {
+                    dw.Left = mainRect.Left;
+                }
+                else
+                {
+                    dw.Left = mainRect.Right - dw.Width;
+                }
+            }
+            else//left or right
+            {
+                if (mainRect.Right + dw.Width <= workArea.Right)//right
+                {
+                    dw.Left = mainRect.Right;
+                }
+                else
+                {
+                    dw.Left = mainRect.Left - dw.Width;//left
+                }
+                if (mainRect.Top + dw.Height <= workArea.Bottom)
+                {
+                    dw.Top = mainRect.Top;
+                }
+                else
+                {
+                    dw.Top = workArea.Bottom - dw.Height;
+                }
+            }
         }
 
         public readonly Thickness windowMargin = new Thickness(-3, 3, -3, 0);
