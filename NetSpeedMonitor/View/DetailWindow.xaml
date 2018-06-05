@@ -68,7 +68,8 @@
                     <Setter Property="Height" Value="20"/>
                 </Style>
                 <Style TargetType="{x:Type TextBlock}">
-                    <Setter Property="FontSize" Value="10" />
+                    <Setter Property="FontSize" Value="10"/>
+                    <Setter Property="Foreground" Value="Black"/>
                 </Style>
                 <Style TargetType="Image">
                     <Setter Property="Width" Value="14"/>

@@ -48,7 +48,7 @@
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
 
-        <Label Name="DownloadLabel" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0,0,5,2.2" FontSize="10.3">0K/s</Label>
-        <Label Name="UploadLabel" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0,0,11,2.2" FontSize="10.3">0K/s</Label>
+        <Label Name="DownloadLabel" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0,0,5,2.2" FontSize="10.3" Foreground="Black">0K/s</Label>
+        <Label Name="UploadLabel" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0,0,11,2.2" FontSize="10.3" Foreground="Black">0K/s</Label>
     </Grid>
 </Window>
