@@ -252,23 +252,23 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
 
         private void InitializeTray()
         {
-            menuExit = new System.Windows.Forms.MenuItem(FindResource("Exit").ToString(), TrayMenu_Click);
+            menuExit = new System.Windows.Forms.MenuItem(Tool.GetStringResource("Exit"), TrayMenu_Click);
 
-            menuEdgeHide = new System.Windows.Forms.MenuItem(FindResource("HideWhenCloseToEdge").ToString(), TrayMenu_Click)
+            menuEdgeHide = new System.Windows.Forms.MenuItem(Tool.GetStringResource("HideWhenCloseToEdge"), TrayMenu_Click)
             {
                 Checked = Settings.Default.edgeHide
             };
-            menuShowTrayIcon = new System.Windows.Forms.MenuItem(FindResource("ShowTrayIcon").ToString(), TrayMenu_Click)
+            menuShowTrayIcon = new System.Windows.Forms.MenuItem(Tool.GetStringResource("ShowTrayIcon"), TrayMenu_Click)
             {
                 Checked = Settings.Default.ShowTrayIcon
             };
-            menuStartOnBoot = new System.Windows.Forms.MenuItem(FindResource("StartOnBoot").ToString(), TrayMenu_Click)
+            menuStartOnBoot = new System.Windows.Forms.MenuItem(Tool.GetStringResource("StartOnBoot"), TrayMenu_Click)
             {
                 Checked = Settings.Default.startOnBoot
             };
-            System.Windows.Forms.MenuItem menuLanguage = new System.Windows.Forms.MenuItem(FindResource("Language").ToString());
+            System.Windows.Forms.MenuItem menuLanguage = new System.Windows.Forms.MenuItem(Tool.GetStringResource("Language"));
             String nowLanguageFile = Settings.Default.language;
-            System.Windows.Forms.MenuItem menuDefault = new System.Windows.Forms.MenuItem(FindResource("UserDefault").ToString(),
+            System.Windows.Forms.MenuItem menuDefault = new System.Windows.Forms.MenuItem(Tool.GetStringResource("UserDefault"),
                 TrayMenu_Change_Language_Click)
             {
                 Tag = ""
@@ -290,18 +290,30 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
             {
                 menuDefault.Checked = true;
             }
-            menuAutoUpdate = new System.Windows.Forms.MenuItem(FindResource("CheckForUpdatesAutomatically").ToString(), TrayMenu_Click)
+            menuTransparency = new System.Windows.Forms.MenuItem(Tool.GetStringResource("Transparency"));
+            for (int i = 100; i >= 10; i -= 10)
+            {
+                System.Windows.Forms.MenuItem menuItem = new System.Windows.Forms.MenuItem()
+                {
+                    Text = i + "%",
+                    Tag = i
+                };
+                menuItem.Click += TrayMenu_Change_Transparency_Click;
+                menuTransparency.MenuItems.Add(menuItem);
+            }
+            Callback_TransparencyDoChange(Settings.Default.Transparency);
+            menuAutoUpdate = new System.Windows.Forms.MenuItem(Tool.GetStringResource("CheckForUpdatesAutomatically"), TrayMenu_Click)
             {
                 Checked = Settings.Default.AutoUpdate
             };
-            menuCheckUpdate = new System.Windows.Forms.MenuItem(FindResource("CheckForUpdates").ToString(), TrayMenu_Click);
-            System.Windows.Forms.MenuItem menuUpdate = new System.Windows.Forms.MenuItem(FindResource("Update").ToString());
+            menuCheckUpdate = new System.Windows.Forms.MenuItem(Tool.GetStringResource("CheckForUpdates"), TrayMenu_Click);
+            System.Windows.Forms.MenuItem menuUpdate = new System.Windows.Forms.MenuItem(Tool.GetStringResource("Update"));
             menuUpdate.MenuItems.Add(menuAutoUpdate);
             menuUpdate.MenuItems.Add(menuCheckUpdate);
 
-            menuAbout = new System.Windows.Forms.MenuItem(FindResource("AboutNetSpeedMonitor").ToString(), TrayMenu_Click);
+            menuAbout = new System.Windows.Forms.MenuItem(Tool.GetStringResource("AboutNetSpeedMonitor"), TrayMenu_Click);
             System.Windows.Forms.ContextMenu menu = new System.Windows.Forms.ContextMenu(new System.Windows.Forms.MenuItem[] {
-                menuStartOnBoot, menuEdgeHide,menuShowTrayIcon, menuLanguage, menuUpdate, menuAbout, menuExit });
+                menuStartOnBoot, menuEdgeHide,menuShowTrayIcon, menuLanguage, menuTransparency, menuUpdate, menuAbout, menuExit });
 
             notifyIcon = new System.Windows.Forms.NotifyIcon
             {
@@ -309,6 +321,17 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
                 ContextMenu = menu,
                 Visible = Settings.Default.ShowTrayIcon
             };
+        }
+
+        private void TrayMenu_Change_Transparency_Click(object sender, EventArgs e)
+        {
+            if(sender is System.Windows.Forms.MenuItem i)
+            {
+                if(!i.Checked && i.Tag is int newTransparency)
+                {
+                    TryToSetTransparency(newTransparency);
+                }
+            }
         }
 
         private void TrayMenu_Change_Language_Click(object sender, EventArgs e)
@@ -340,6 +363,28 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
             catch (Exception)
             {
             }
+        }
+
+        public void Callback_TransparencyDoChange(int transparency)
+        {
+            if (transparency <= 100 && transparency >= 10 && transparency % 10 == 0)
+            {
+                foreach(System.Windows.Forms.MenuItem item in menuTransparency.MenuItems)
+                {
+                    if(item.Tag is int myTag)
+                    {
+                        item.Checked = myTag == transparency;
+                    }
+                }
+            }
+        }
+
+        public void TryToSetTransparency(int transparency)
+        {
+            Settings.Default.Transparency = transparency;
+            Settings.Default.Save();
+            mainWindow.Callback_TransparencyDoChange(transparency);
+            Callback_TransparencyDoChange(transparency);
         }
 
         public void TryToSetAutoUpdate(bool autoUpdate)
@@ -448,7 +493,7 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
             }));
         }
 
-        public System.Windows.Forms.MenuItem menuExit, menuEdgeHide, menuShowTrayIcon, menuStartOnBoot, menuAutoUpdate, menuCheckUpdate, menuAbout;
+        public System.Windows.Forms.MenuItem menuExit, menuEdgeHide, menuShowTrayIcon, menuStartOnBoot, menuTransparency, menuAutoUpdate, menuCheckUpdate, menuAbout;
 
         private System.Windows.Forms.NotifyIcon notifyIcon;
         private MainWindow mainWindow;

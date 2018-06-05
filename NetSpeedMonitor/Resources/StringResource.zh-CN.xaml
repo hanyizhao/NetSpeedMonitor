@@ -30,4 +30,5 @@
     <sys:String x:Key="Version">版本</sys:String>
     <sys:String x:Key="CurrentVersion">当前版本：</sys:String>
     <sys:String x:Key="ShowTrayIcon">显示托盘图标</sys:String>
+    <sys:String x:Key="Transparency">不透明度</sys:String>
 </ResourceDictionary>

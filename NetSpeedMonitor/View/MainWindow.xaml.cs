@@ -53,6 +53,7 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
             WindowMenuStartOnBoot.IsChecked = Settings.Default.startOnBoot;
             WindowMenuEdgeHide.IsChecked = Settings.Default.edgeHide;
             WindowMenuShowTrayIcon.IsChecked = Settings.Default.ShowTrayIcon;
+            //Language Settings
             List<OneLanguage> languages = Languages.GetLanguages();
             String nowLanguageFile = Settings.Default.language;
             foreach(OneLanguage i in languages)
@@ -73,6 +74,52 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
             }
             WindowMenuUserDefault.Tag = "";
             WindowMenuAutoUpdate.IsChecked = Settings.Default.AutoUpdate;
+            //Transparency Settings
+            for (int i = 100; i >= 10; i -= 10)
+            {
+                MenuItem menuItem = new MenuItem()
+                {
+                    Header = i + "%",
+                    IsCheckable = true,
+                    Tag = i
+                };
+                menuItem.Click += MenuItem_ChangeTransparency;
+                WindowMenuTransparency.Items.Add(menuItem);
+            }
+            Callback_TransparencyDoChange(Settings.Default.Transparency);
+        }
+
+        public void Callback_TransparencyDoChange(int transparency)
+        {
+            if(transparency <= 100 && transparency >= 10 && transparency % 10 == 0)
+            {
+                foreach (MenuItem i in WindowMenuTransparency.Items)
+                {
+                    if(i.Tag is int myTag)
+                    {
+                        i.IsChecked = myTag == transparency;
+                    }
+                }
+                Opacity = (double)transparency / 100;
+            }
+        }
+
+        private void MenuItem_ChangeTransparency(object sender, RoutedEventArgs e)
+        {
+            if(sender is MenuItem menuItem)
+            {
+                if (!menuItem.IsChecked)
+                {
+                    menuItem.IsChecked = true;
+                }
+                else
+                {
+                    if(Application.Current is App app && menuItem.Tag is int transparency)
+                    {
+                        app.TryToSetTransparency(transparency);
+                    }
+                }
+            }
         }
 
         private void MenuItem_ChangeLanguageClick(object sender, RoutedEventArgs e)

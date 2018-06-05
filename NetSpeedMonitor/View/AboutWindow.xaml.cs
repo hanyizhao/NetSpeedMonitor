@@ -23,7 +23,7 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
         public AboutWindow()
         {
             InitializeComponent();
-            TextBlockVersion.Text = FindResource("Version").ToString() + " " + Tool.GetVersion();
+            TextBlockVersion.Text = Tool.GetStringResource("Version") + " " + Tool.GetVersion();
         }
 
         private void ButtonOK_Click(object sender, RoutedEventArgs e)
