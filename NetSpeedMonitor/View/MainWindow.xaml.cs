@@ -4,10 +4,10 @@ using SharpPcap.LibPcap;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
-using System.Threading;
 using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
@@ -29,7 +29,7 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
             detailWindow = new DetailWindow(this);
             detailWindow.IsVisibleChanged += DetailWindow_IsVisibleChanged;
         }
-
+        
         private void DetailWindow_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             if(detailWindow.Visibility == Visibility.Hidden)
@@ -240,7 +240,7 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            Tool.WindowMissFromMission(this);
+            Tool.WindowMissFromMission(this, true);
         }
 
         protected override void OnSourceInitialized(EventArgs e)
@@ -258,7 +258,17 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
                 if (wParam.ToInt32() == (int)ABNotify.ABN_FULLSCREENAPP)
                 {
                     IntPtr win = WinAPIWrapper.GetForegroundWindow();
-                    if (!win.Equals(desktopHandle) && !win.Equals(shellHandle) && lParam.ToInt32() == 1)
+                    WinAPIWrapper.GetWindowThreadProcessId(win, out uint processid);
+                    String foreGroundWindowName = "";
+                    try
+                    {
+                        foreGroundWindowName = Process.GetProcessById((int)processid).ProcessName;
+                    }
+                    catch(Exception)
+                    {
+                    }
+                    if (foreGroundWindowName != "explorer" && !win.Equals(new WindowInteropHelper(this).Handle)
+                        && !win.Equals(desktopHandle) && !win.Equals(shellHandle) && lParam.ToInt32() == 1)
                     {
                         HideAllView(true);
                     }
@@ -365,7 +375,7 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
             if (register)
             {
                 //register
-                uCallBackMsg = WinAPIWrapper.RegisterWindowMessage("APPBARMSG_CSDN_HELPER");
+                uCallBackMsg = WinAPIWrapper.RegisterWindowMessage("APPBARMSG_CSDN_HELPER_USTC.Software.hanyizhao.NetSpeedMonitor");
                 abd.uCallbackMessage = uCallBackMsg;
                 uint ret = WinAPIWrapper.SHAppBarMessage((int)ABMsg.ABM_NEW, ref abd);
             }
@@ -445,7 +455,7 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
                 }
             }
         }
-
+        
         public readonly Thickness windowMargin = new Thickness(-3, 3, -3, 0);
     }
 }

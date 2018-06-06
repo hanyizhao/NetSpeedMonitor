@@ -13,6 +13,7 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
         /// </summary>  
         public const int GWL_EXSTYLE = -20;
         public const int WS_EX_TOOLWINDOW = 0x80;
+        public const int WS_EX_NOACTIVATE = 0x08000000;
 
         /// <summary>
         /// 设置窗体的样式     
@@ -42,6 +43,9 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
         //取得Shell窗口句柄函数 
         [DllImport("user32.dll")]
         public static extern IntPtr GetShellWindow();
+        //Get Process ID by window handle.
+        [DllImport("user32.dll", SetLastError = true)]
+        public static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
         //取得桌面窗口句柄函数 
         [DllImport("user32.dll")]
         public static extern IntPtr GetDesktopWindow();

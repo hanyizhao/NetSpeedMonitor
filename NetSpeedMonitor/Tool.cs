@@ -212,12 +212,17 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
         /// Remove the window from "Alt + TAB list".
         /// </summary>
         /// <param name="window">The window</param>
-        public static void WindowMissFromMission(Window window)
+        /// <param name="NoActivate">No activate (get focus)</param>
+        public static void WindowMissFromMission(Window window, bool NoActivate)
         {
             WindowInteropHelper helper = new WindowInteropHelper(window);
             long old = WinAPIWrapper.GetWindowLong(helper.Handle, WinAPIWrapper.GWL_EXSTYLE);
             old |= WinAPIWrapper.WS_EX_TOOLWINDOW;
-            Console.WriteLine(WinAPIWrapper.SetWindowLong(helper.Handle, WinAPIWrapper.GWL_EXSTYLE, (IntPtr)old));
+            if(NoActivate)
+            {
+                old |= WinAPIWrapper.WS_EX_NOACTIVATE;
+            }
+            Console.WriteLine("Remove the window from Alt+TAB list" + WinAPIWrapper.SetWindowLong(helper.Handle, WinAPIWrapper.GWL_EXSTYLE, (IntPtr)old));
         }
 
         /// <summary>

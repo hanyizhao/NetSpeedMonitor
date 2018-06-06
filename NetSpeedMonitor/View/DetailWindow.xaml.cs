@@ -246,7 +246,7 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            Tool.WindowMissFromMission(this);
+            Tool.WindowMissFromMission(this, false);
         }
 
         private void Window_MouseEnter(object sender, MouseEventArgs e)
