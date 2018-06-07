@@ -240,7 +240,7 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            Tool.WindowMissFromMission(this, true);
+            Tool.WindowMissFromMission(this, false);
         }
 
         protected override void OnSourceInitialized(EventArgs e)
@@ -257,25 +257,35 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
             {
                 if (wParam.ToInt32() == (int)ABNotify.ABN_FULLSCREENAPP)
                 {
-                    IntPtr win = WinAPIWrapper.GetForegroundWindow();
-                    WinAPIWrapper.GetWindowThreadProcessId(win, out uint processid);
-                    String foreGroundWindowName = "";
-                    try
+                    bool hasFull = false;
+                    if (lParam.ToInt32() == 1)
                     {
-                        foreGroundWindowName = Process.GetProcessById((int)processid).ProcessName;
+                        IntPtr foreWindow = WinAPIWrapper.GetForegroundWindow();
+                        WinAPIWrapper.GetWindowThreadProcessId(foreWindow, out uint processid);
+                        String foreGroundWindowName = "";
+                        try
+                        {
+                            foreGroundWindowName = Process.GetProcessById((int)processid).ProcessName;
+                        }
+                        catch (Exception)
+                        {
+                        }
+                        if (foreGroundWindowName != "explorer" && !foreWindow.Equals(new WindowInteropHelper(this).Handle))
+                        {
+                            IntPtr deskWindow = WinAPIWrapper.GetDesktopWindow();
+                            if (!foreWindow.Equals(deskWindow) && !foreWindow.Equals(WinAPIWrapper.GetShellWindow()))
+                            {
+                                WinAPIWrapper.GetWindowRect(foreWindow, out RECT foreWindowRECT);
+                                WinAPIWrapper.GetWindowRect(deskWindow, out RECT deskWindowRECT);
+                                hasFull = foreWindowRECT.left <= deskWindowRECT.left
+                                    && foreWindowRECT.top <= deskWindowRECT.top
+                                    && foreWindowRECT.right >= deskWindowRECT.right
+                                    && foreWindowRECT.bottom >= deskWindowRECT.bottom;
+                            }
+                        }
+
                     }
-                    catch(Exception)
-                    {
-                    }
-                    if (foreGroundWindowName != "explorer" && !win.Equals(new WindowInteropHelper(this).Handle)
-                        && !win.Equals(desktopHandle) && !win.Equals(shellHandle) && lParam.ToInt32() == 1)
-                    {
-                        HideAllView(true);
-                    }
-                    else
-                    {
-                        HideAllView(false);
-                    }
+                    HideAllView(hasFull);
                 }
             }
             return IntPtr.Zero;
@@ -369,9 +379,7 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
             abd.cbSize = Marshal.SizeOf(abd);
             WindowInteropHelper helper = new WindowInteropHelper(this);
             abd.hWnd = helper.Handle;
-
-            desktopHandle = WinAPIWrapper.GetDesktopWindow();
-            shellHandle = WinAPIWrapper.GetShellWindow();
+            
             if (register)
             {
                 //register
@@ -384,9 +392,7 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
                 WinAPIWrapper.SHAppBarMessage((int)ABMsg.ABM_REMOVE, ref abd);
             }
         }
-
-        private IntPtr desktopHandle;
-        private IntPtr shellHandle;
+       
         private int uCallBackMsg;
 
         private DetailWindow detailWindow;
