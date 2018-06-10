@@ -248,11 +248,51 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
             base.OnSourceInitialized(e);
             IntPtr handle = (new WindowInteropHelper(this)).Handle;
             HwndSource.FromHwnd(handle).AddHook(new HwndSourceHook(WindowProc));
+            taskBarCreatedMsg = WinAPIWrapper.RegisterWindowMessage("TaskbarCreated");
+            uCallBackMsg = WinAPIWrapper.RegisterWindowMessage("APPBARMSG_CSDN_HELPER_USTC.Software.hanyizhao.NetSpeedMonitor");
             RegisterAppBar(true);
+        }
+        
+        /// <summary>
+        /// Call this method in main thread.
+        /// </summary>
+        private bool CheckHasFullScreenApp()
+        {
+            bool result = false;
+            IntPtr foreWindow = WinAPIWrapper.GetForegroundWindow();
+            WinAPIWrapper.GetWindowThreadProcessId(foreWindow, out uint processid);
+            String foreGroundWindowName = "";
+            try
+            {
+                foreGroundWindowName = Process.GetProcessById((int)processid).ProcessName;
+            }
+            catch (Exception)
+            {
+            }
+            if (foreGroundWindowName != "explorer" && !foreWindow.Equals(new WindowInteropHelper(this).Handle))
+            {
+                IntPtr deskWindow = WinAPIWrapper.GetDesktopWindow();
+                if (!foreWindow.Equals(deskWindow) && !foreWindow.Equals(WinAPIWrapper.GetShellWindow()))
+                {
+                    WinAPIWrapper.GetWindowRect(foreWindow, out RECT foreWindowRECT);
+                    WinAPIWrapper.GetWindowRect(deskWindow, out RECT deskWindowRECT);
+                    result = foreWindowRECT.left <= deskWindowRECT.left
+                        && foreWindowRECT.top <= deskWindowRECT.top
+                        && foreWindowRECT.right >= deskWindowRECT.right
+                        && foreWindowRECT.bottom >= deskWindowRECT.bottom;
+                }
+            }
+            return result;
         }
 
         private IntPtr WindowProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
+            if(msg == taskBarCreatedMsg)
+            {
+                Console.WriteLine("Receive Message: TaskbarCreated");
+                RegisterAppBar(false);
+                RegisterAppBar(true);
+            }
             if (msg == uCallBackMsg)
             {
                 if (wParam.ToInt32() == (int)ABNotify.ABN_FULLSCREENAPP)
@@ -260,30 +300,7 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
                     bool hasFull = false;
                     if (lParam.ToInt32() == 1)
                     {
-                        IntPtr foreWindow = WinAPIWrapper.GetForegroundWindow();
-                        WinAPIWrapper.GetWindowThreadProcessId(foreWindow, out uint processid);
-                        String foreGroundWindowName = "";
-                        try
-                        {
-                            foreGroundWindowName = Process.GetProcessById((int)processid).ProcessName;
-                        }
-                        catch (Exception)
-                        {
-                        }
-                        if (foreGroundWindowName != "explorer" && !foreWindow.Equals(new WindowInteropHelper(this).Handle))
-                        {
-                            IntPtr deskWindow = WinAPIWrapper.GetDesktopWindow();
-                            if (!foreWindow.Equals(deskWindow) && !foreWindow.Equals(WinAPIWrapper.GetShellWindow()))
-                            {
-                                WinAPIWrapper.GetWindowRect(foreWindow, out RECT foreWindowRECT);
-                                WinAPIWrapper.GetWindowRect(deskWindow, out RECT deskWindowRECT);
-                                hasFull = foreWindowRECT.left <= deskWindowRECT.left
-                                    && foreWindowRECT.top <= deskWindowRECT.top
-                                    && foreWindowRECT.right >= deskWindowRECT.right
-                                    && foreWindowRECT.bottom >= deskWindowRECT.bottom;
-                            }
-                        }
-
+                        hasFull = CheckHasFullScreenApp();
                     }
                     HideAllView(hasFull);
                 }
@@ -377,15 +394,15 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
         {
             APPBARDATA abd = new APPBARDATA();
             abd.cbSize = Marshal.SizeOf(abd);
-            WindowInteropHelper helper = new WindowInteropHelper(this);
-            abd.hWnd = helper.Handle;
+            abd.hWnd = new WindowInteropHelper(this).Handle;
             
             if (register)
             {
                 //register
-                uCallBackMsg = WinAPIWrapper.RegisterWindowMessage("APPBARMSG_CSDN_HELPER_USTC.Software.hanyizhao.NetSpeedMonitor");
                 abd.uCallbackMessage = uCallBackMsg;
                 uint ret = WinAPIWrapper.SHAppBarMessage((int)ABMsg.ABM_NEW, ref abd);
+                // Check whether there is a full screen app now.
+                HideAllView(CheckHasFullScreenApp());
             }
             else
             {
@@ -393,7 +410,7 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
             }
         }
        
-        private int uCallBackMsg;
+        private int uCallBackMsg, taskBarCreatedMsg;
 
         private DetailWindow detailWindow;
         
