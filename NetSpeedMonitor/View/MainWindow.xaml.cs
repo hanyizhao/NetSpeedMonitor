@@ -8,11 +8,13 @@ using System.Diagnostics;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interop;
+using System.Windows.Threading;
 using USTC.Software.hanyizhao.NetSpeedMonitor.Properties;
 
 namespace USTC.Software.hanyizhao.NetSpeedMonitor
@@ -28,8 +30,27 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
             InitializeWindowMenu();
             detailWindow = new DetailWindow(this);
             detailWindow.IsVisibleChanged += DetailWindow_IsVisibleChanged;
+            dispatcherTimer = new DispatcherTimer();
+            dispatcherTimer.Tick += DispatcherTimer_Tick;
         }
-        
+
+        private void DispatcherTimer_Tick(object sender, EventArgs e)
+        {
+            //Console.WriteLine("DispatcherTimer_Tick: " + DateTime.Now);
+            if(CheckHasFullScreenApp(out bool notSure))
+            {
+                dispatcherTimer.IsEnabled = false;
+                HideAllView(true);
+            }
+            else
+            {
+                if(dispatcherTimer.Interval < maxSpan)
+                {
+                    dispatcherTimer.Interval += spaceTimeSpan;
+                }
+            }
+        }
+
         private void DetailWindow_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             if(detailWindow.Visibility == Visibility.Hidden)
@@ -252,19 +273,24 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
             uCallBackMsg = WinAPIWrapper.RegisterWindowMessage("APPBARMSG_CSDN_HELPER_USTC.Software.hanyizhao.NetSpeedMonitor");
             RegisterAppBar(true);
         }
-        
+
         /// <summary>
         /// Call this method in main thread.
         /// </summary>
-        private bool CheckHasFullScreenApp()
+        /// <param name="causeNotFillScreen">The foreground window is not a full screen App because it doesn't fill the screen.
+        /// Otherwise, because it is Window Explorer or...</param>
+        /// <returns></returns>
+        private bool CheckHasFullScreenApp(out bool causeNotFillScreen)
         {
-            bool result = false;
+            causeNotFillScreen = false;
+            bool result;
             IntPtr foreWindow = WinAPIWrapper.GetForegroundWindow();
             WinAPIWrapper.GetWindowThreadProcessId(foreWindow, out uint processid);
             String foreGroundWindowName = "";
             try
             {
                 foreGroundWindowName = Process.GetProcessById((int)processid).ProcessName;
+                //Console.WriteLine("foreGroundWindowName:" + foreGroundWindowName);
             }
             catch (Exception)
             {
@@ -276,11 +302,25 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
                 {
                     WinAPIWrapper.GetWindowRect(foreWindow, out RECT foreWindowRECT);
                     WinAPIWrapper.GetWindowRect(deskWindow, out RECT deskWindowRECT);
+                    //Console.WriteLine("foreWindow RECT:" + foreWindowRECT);
+                    //Console.WriteLine("deskWindow RECT:" + deskWindowRECT);
+                    // Check whether foreground Window fills main screen.
                     result = foreWindowRECT.left <= deskWindowRECT.left
                         && foreWindowRECT.top <= deskWindowRECT.top
                         && foreWindowRECT.right >= deskWindowRECT.right
                         && foreWindowRECT.bottom >= deskWindowRECT.bottom;
+                    causeNotFillScreen = true;
                 }
+                else
+                {
+                    // Foreground Window is DeskWindow or ShellWindow.
+                    result = false;
+                }
+            }
+            else
+            {
+                // Foreground window is Windows Explorer or MainWindow itself.
+                result = false;
             }
             return result;
         }
@@ -290,6 +330,7 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
             if(msg == taskBarCreatedMsg)
             {
                 Console.WriteLine("Receive Message: TaskbarCreated");
+                dispatcherTimer.IsEnabled = false;
                 RegisterAppBar(false);
                 RegisterAppBar(true);
             }
@@ -300,7 +341,24 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
                     bool hasFull = false;
                     if (lParam.ToInt32() == 1)
                     {
-                        hasFull = CheckHasFullScreenApp();
+                        hasFull = CheckHasFullScreenApp(out bool notSure);
+                        if(!hasFull && notSure)
+                        {
+                            // Now taskbar tells us where is a full screen app. But it doesn't not fill screen now. Maybe it will fill screen later.
+                            if(!dispatcherTimer.IsEnabled)
+                            {
+                                dispatcherTimer.Interval = minSpan;
+                                dispatcherTimer.IsEnabled = true;
+                            }
+                        }
+                        else
+                        {
+                            dispatcherTimer.IsEnabled = false;
+                        }
+                    }
+                    else
+                    {
+                        dispatcherTimer.IsEnabled = false;
                     }
                     HideAllView(hasFull);
                 }
@@ -402,7 +460,7 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
                 abd.uCallbackMessage = uCallBackMsg;
                 uint ret = WinAPIWrapper.SHAppBarMessage((int)ABMsg.ABM_NEW, ref abd);
                 // Check whether there is a full screen app now.
-                HideAllView(CheckHasFullScreenApp());
+                HideAllView(CheckHasFullScreenApp(out bool a));
             }
             else
             {
@@ -419,6 +477,10 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
 
         private double oldLeft, oldTop;
         private DateTime leftPressTime = DateTime.Now;
+        private DispatcherTimer dispatcherTimer;
+        private TimeSpan minSpan = new TimeSpan(2500000);// 0.2s
+        private TimeSpan maxSpan = new TimeSpan(0, 0, 7);
+        private TimeSpan spaceTimeSpan = new TimeSpan(7500000);
 
         public readonly Thickness windowPadding = new Thickness(-3, 0, -3, -3);
 

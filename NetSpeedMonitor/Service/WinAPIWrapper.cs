@@ -84,6 +84,11 @@ namespace USTC.Software.hanyizhao.NetSpeedMonitor
         public int top;
         public int right;
         public int bottom;
+
+        public override string ToString()
+        {
+            return "[" + left + "," + top + "," + right + "," + bottom + "]";
+        }
     }
 
     [StructLayout(LayoutKind.Sequential)]
